@@ -3,30 +3,32 @@ namespace OOP_1__console_paint_.Canvas.Shapes
 {
     public class Square
     {
-        int xCenter;
-        int yCenter;
-        int length;
+        Point _center;
+        int _length;
 
         public Square(int xCenter, int yCenter, int length)
         {
-            this.xCenter = xCenter;
-            this.yCenter = yCenter;
-            this.length = length;
+            _center = new Point(xCenter, yCenter);
+            this._length = length;
         }
 
         public List<Point> GetVertexPoints()
         {
             List<Point> pointsList = new List<Point> ();
 
-            int topLeftX = xCenter - (int)(length / 2);
-            int topLeftY = yCenter - (int)(length / 2);
+            int topLeftX = _center.x - (int)(_length / 2);
+            int topLeftY = _center.y - (int)(_length / 2);
 
-            pointsList.Add(new Point(xCenter, yCenter));
-            pointsList.Add(new Point(topLeftX, topLeftY));
-            pointsList.Add(new Point(topLeftX + length, topLeftY));
-            pointsList.Add(new Point(topLeftX, topLeftY + length));
-            pointsList.Add(new Point(topLeftX + length, topLeftY + length));
+            pointsList.Add(new Point(topLeftX, topLeftY)); //TopLeft
+            pointsList.Add(new Point(topLeftX + _length, topLeftY)); //TopRight
+            pointsList.Add(new Point(topLeftX + _length, topLeftY + _length)); //BottomRight
+            pointsList.Add(new Point(topLeftX, topLeftY + _length)); //BottomLeft
             return pointsList;
+        }
+
+        public Point GetCenter()
+        {
+            return _center;
         }
     }
 }
