@@ -16,9 +16,9 @@ namespace OOP_1__console_paint_
         public async void Start()
         {
             canvas.DrawCanvas();
-            canvas.DrawRectangle(50, 10, 21, 12);
-            canvas.DrawCircle(30, 16, 13);
-            canvas.DrawTriangle(73, 10, 6, 8 , 10);
+            //canvas.DrawRectangle(50, 10, 21, 12);
+            //canvas.DrawCircle(35, 20, 16);
+            //canvas.DrawTriangle(73, 10, 6, 8 , 10);
             comandManager.Start();
             
         }

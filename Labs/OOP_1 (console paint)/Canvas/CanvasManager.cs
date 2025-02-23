@@ -101,6 +101,12 @@ namespace OOP_1__console_paint_.Canvas
             Console.Write(symbol);
         }
 
+        private void DrawScaledSymbol(int x, int y, char symbol)
+        {
+            Console.SetCursorPosition(x, y);
+            Console.Write(symbol);
+        }
+
         private void DrawVertexPoints(List<Point> pointList)
         {
             for (int i = 0; i < pointList.Count; i++)
@@ -195,11 +201,12 @@ namespace OOP_1__console_paint_.Canvas
                 DrawSymbol(xCenter + x, yCenter - y, '.');
                 DrawSymbol(xCenter - x, yCenter - y, '.');
 
-                DrawSymbol(xCenter + y, yCenter + x, '.');
-                DrawSymbol(xCenter - y, yCenter + x, '.');
-
                 DrawSymbol(xCenter + y, yCenter - x, '.');
                 DrawSymbol(xCenter - y, yCenter - x, '.');
+
+                DrawScaledSymbol(xCenter + y, (int)(Math.Ceiling((yCenter + x) * scale)), '.');
+                DrawScaledSymbol(xCenter - y, (int)(Math.Ceiling((yCenter + x) * scale)), '.');
+
 
                 y++;
 
