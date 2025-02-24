@@ -7,6 +7,8 @@ namespace OOP_1__console_paint_.Canvas.Shapes
         Point _top;
         Point _bottomRight;
         Point _bottomLeft;
+        List<Point>? _allPoints = null;
+
         int _rightSideLength;
         int _leftSideLength;
         int _baseLength;
@@ -14,7 +16,7 @@ namespace OOP_1__console_paint_.Canvas.Shapes
         public Triangle(int xTop, int yTop, int leftSideLength, int baseLength, int rightSideLength)
         {
             _top = new Point(xTop, yTop);
-            
+
             this._rightSideLength = rightSideLength;
             this._leftSideLength = leftSideLength;
             this._baseLength = baseLength;
@@ -31,7 +33,7 @@ namespace OOP_1__console_paint_.Canvas.Shapes
         public List<Point> GetVertexPoints()
         {
             List<Point> pointsList = new List<Point>();
-            
+
             pointsList.Add(_top);
             pointsList.Add(_bottomRight);
             pointsList.Add(_bottomLeft);
@@ -46,12 +48,90 @@ namespace OOP_1__console_paint_.Canvas.Shapes
 
         private Point CalculateCenter()
         {
-            int xCenter = (int)((_top.x + _bottomLeft.x + _bottomRight.x)/ 3);
+            int xCenter = (int)((_top.x + _bottomLeft.x + _bottomRight.x) / 3);
             int yCenter = (int)((_top.y + _bottomLeft.y + _bottomRight.y) / 3);
             Point center = new Point(xCenter, yCenter);
             return center;
         }
 
-        
+        public bool IsContainPoint(Point P)
+        {
+            (int x, int y) A = (_top.x, _top.y);
+            (int x, int y) B = (_bottomLeft.x, _bottomLeft.y);
+            (int x, int y) C = (_bottomRight.x, _bottomRight.y);
+
+            float denominator = (float)((B.y - C.y) * (A.x - C.x) + (C.x - B.x) * (A.y - C.y));
+            float lambda1 = ((B.y - C.y) * (P.x - C.x) + (C.x - B.x) * (P.y - C.y)) / denominator;
+            float lambda2 = ((C.y - A.y) * (P.x - C.x) + (A.x - C.x) * (P.y - C.y)) / denominator;
+            float lambda3 = 1 - lambda1 - lambda2;
+
+
+            return lambda1 >= 0 && lambda2 >= 0 && lambda3 >= 0;
+        }
+
+        public List<Point> GetAllPoints()
+        {
+            if(_allPoints != null)
+            {
+                return _allPoints;
+            }
+
+            _allPoints = new List<Point>();
+            
+            foreach(Point point in GetPointsFromPoints(_top, _bottomLeft))
+            {
+                _allPoints.Add(point);
+            }
+
+            foreach (Point point in GetPointsFromPoints(_bottomLeft, _bottomRight))
+            {
+                _allPoints.Add(point);
+            }
+
+            foreach (Point point in GetPointsFromPoints(_top, _bottomRight))
+            {
+                _allPoints.Add(point);
+            }
+
+            return _allPoints;
+        } 
+
+
+        private List<Point> GetPointsFromPoints(Point p1, Point p2)
+        {
+            List<Point> points = new List<Point>();
+
+            int x1 = p1.x, y1 = p1.y;
+            int x2 = p2.x, y2 = p2.y;
+
+            int dx = Math.Abs(x1 - x2);
+            int dy = Math.Abs(y1 - y2);
+
+            int sx = x1 < x2 ? 1 : -1;
+            int sy = y1 < y2 ? 1 : -1;
+
+            int err = dx - dy, e2;
+
+            while (true)
+            {
+                points.Add(new Point(x1, y1));
+
+                if (x1 == x2 && y1 == y2) break;
+                e2 = 2 * err;
+
+                if (e2 > -dy)
+                {
+                    err -= dy;
+                    x1 += sx;
+                }
+
+                if (e2 < dx)
+                {
+                    err += dx;
+                    y1 += sy;
+                }
+            }
+            return points;
+        } 
     }
 }

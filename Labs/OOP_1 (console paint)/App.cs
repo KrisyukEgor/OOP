@@ -13,12 +13,13 @@ namespace OOP_1__console_paint_
             comandManager = new ComandManager();
             canvas = CanvasManager.getInstance();
         }
-        public async void Start()
+        public void Start()
         {
             canvas.DrawCanvas();
-            //canvas.DrawRectangle(50, 10, 21, 12);
-            //canvas.DrawCircle(35, 20, 16);
-            //canvas.DrawTriangle(73, 10, 6, 8 , 10);
+            canvas.DrawRectangle(48, 8, 10, 10);
+            canvas.DrawRectangle(50, 10, 6, 6);
+            //canvas.DrawCircle(35, 20, 16)
+            //canvas.DrawTriangle(56, 10, 6, 8, 10);
             comandManager.Start();
             
         }

@@ -5,8 +5,8 @@ namespace OOP_1__console_paint_.Comands
 {
     public class ComandManager
     {
-        int comandCursorHeight;
-        int comandCursorWidth;
+
+        Point cursorPositon;
         bool _isRun;
 
         Dictionary<string, Delegate> commandsDictionary;
@@ -16,24 +16,23 @@ namespace OOP_1__console_paint_.Comands
             canvas = CanvasManager.getInstance();
             commandsDictionary = new Dictionary<string, Delegate>
             {
-                { "/drawcircle", (Action<int, int, int>)((x, y, r) => canvas.DrawCircle(x, y, r))},
-                { "/drawsquare", (Action<int, int, int>)((x, y, length) => canvas.DrawSquare(x, y, length))},
-                { "/drawrect", (Action<int, int, int, int>)((x, y, w, h) => canvas.DrawRectangle(x, y, w, h))},
-                { "/drawtriangle", (Action<int, int, int, int ,int>)((x, y, ls, bs, rs) => canvas.DrawTriangle(x, y, ls, bs, rs)) },
-                { "/help", (Action)WriteHelp },
-                { "/exit", (Action)Exit }
+                { "/drawcircle", (Func<int, int, int, bool>)((x, y, r) => canvas.DrawCircle(x, y, r))},
+                { "/drawsquare", (Func<int, int, int, bool>)((x, y, length) => canvas.DrawSquare(x, y, length))},
+                { "/drawrect", (Func<int, int, int, int, bool>)((x, y, w, h) => canvas.DrawRectangle(x, y, w, h))},
+                { "/drawtriangle", (Func<int, int, int, int, int, bool>)((x, y, ls, bs, rs) => canvas.DrawTriangle(x, y, ls, bs, rs)) },
+                { "/erase", (Func<bool>)(() => {ChooseAndEraseShape(); return true; }) },
+                { "/help", (Func<bool>)(() => { WriteHelp(); return true; }) },
+                { "/exit", (Func<bool>)(() => { Exit(); return true; }) }
             };
+            cursorPositon = new Point(0, canvas.Height + 1);
 
-            comandCursorHeight = canvas.Height + 1;
-            comandCursorWidth = 0;
             _isRun = true;
         }
         public void Start()
         {
-            Console.SetCursorPosition(comandCursorWidth, comandCursorHeight);
+            Console.SetCursorPosition(cursorPositon.x, cursorPositon.y);
             Console.WriteLine("Введите операцию (все команды /help)");
-            string? input;
-            string? command;
+            string? input, command;
             int[]? args;    
             while(_isRun)
             {
@@ -42,21 +41,21 @@ namespace OOP_1__console_paint_.Comands
 
                 args = GetArgs(input);
 
-                if (args == null)
-                {
-                    Console.WriteLine("args is null");
-                }
+                //if (args == null)
+                //{
+                //    Console.WriteLine("args is null");
+                //}
 
-                for (int i = 0; i < args?.Length; i++)
-                {
-                    Console.Write($"args{i} {args[i]} \t");
-                }
+                //for (int i = 0; i < args?.Length; i++)
+                //{
+                //    Console.Write($"args{i} {args[i]} \t");
+                //}
 
                 int cursorPos = Console.CursorTop;
 
                 if (command != null)
                 {
-                    if (args.Contains(-1))
+                    if (args!= null && args.Contains(-1))
                     {
                         Console.WriteLine("Введите натуральные значения");
                     }
@@ -72,41 +71,46 @@ namespace OOP_1__console_paint_.Comands
                 Console.SetCursorPosition(0, cursorPos + 1);
             }
         }
-        
+
         private void DoComand(string command, int[]? args)
         {
-         
             if (commandsDictionary.TryGetValue(command, out var action))
             {
                 try
                 {
+                    bool success = false; 
+
                     switch (action)
                     {
-
-                        case Action<int, int, int> threeParamAction when args?.Length == 3:
-                            threeParamAction(args[0], args[1], args[2]);
+                        case Func<int, int, int, bool> threeParamAction when args?.Length == 3:
+                            success = threeParamAction(args[0], args[1], args[2]);
                             break;
 
-                        case Action<int, int, int, int> fourParamAction when args?.Length == 4:
-                            fourParamAction(args[0], args[1], args[2], args[3]);
+                        case Func<int, int, int, int, bool> fourParamAction when args?.Length == 4:
+                            success = fourParamAction(args[0], args[1], args[2], args[3]);
                             break;
 
-                        case Action<int, int, int, int, int> fiveParamAction when args?.Length == 5:
-                            fiveParamAction(args[0], args[1], args[2], args[3], args[4]);
+                        case Func<int, int, int, int, int, bool> fiveParamAction when args?.Length == 5:
+                            success = fiveParamAction(args[0], args[1], args[2], args[3], args[4]);
                             break;
 
-                        case Action noParamAction when args == null || args.Length == 0:
-                            noParamAction();
+                        case Func<bool> noParamAction when args == null:
+                            success = noParamAction();
                             break;
 
                         default:
-                            Console.WriteLine("Ошибка: неверное количество аргументов для команды.");
-                            break;
+                            Console.WriteLine("Неверное количество аргументов для команды");
+                            return; 
+                    }
+
+                    if (!success)
+                    {
+                        Console.WriteLine("Фигура выходит за рамки холста");
                     }
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                    Console.WriteLine($"Ошибка: {e.Message}");
                 }
             }
             else
@@ -114,6 +118,7 @@ namespace OOP_1__console_paint_.Comands
                 Console.WriteLine("Ошибка: неверная команда");
             }
         }
+
 
         private string? DetectComand(ref string input)
         {
@@ -201,6 +206,39 @@ namespace OOP_1__console_paint_.Comands
             Console.WriteLine("/exit: Выход");
 
             Console.WriteLine("\n===================================\n ");
+        }
+
+        private void ChooseAndEraseShape()
+        {
+            ConsoleKey key;
+            int x = (int)(canvas.Width / 2);
+            int y = (int)(canvas.Height / 2);
+            
+            do
+            {
+                Console.SetCursorPosition(x, y);
+                key = Console.ReadKey(true).Key;
+
+                switch(key)
+                {
+                    case ConsoleKey.LeftArrow:
+                        if (x > 1) x--;
+                        break;
+                    case ConsoleKey.RightArrow:
+                        if(x < canvas.Width - 2) x++;
+                        break;
+                    case ConsoleKey.UpArrow:
+                        if (y > 0) y--;
+                        break;
+                    case ConsoleKey.DownArrow:
+                        if (y < canvas.Height - 1) y++;
+                        break;
+                    case ConsoleKey.Enter:
+                        canvas.Erase(new Point(x, y));
+                        break;
+
+                }
+            } while (key != ConsoleKey.Escape);
         }
     }
 }
