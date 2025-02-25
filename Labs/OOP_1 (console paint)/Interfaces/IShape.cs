@@ -6,7 +6,9 @@ namespace OOP_1__console_paint_.Interfaces
     {
         Point GetCenter();
         List<Point> GetVertexPoints();
-        List<Point> GetAllPoints();
+        List<Point> GetAllSidesPoints();
         bool IsContainPoint(Point p);
+        int[] GetParameters();
+        string GetName();
     }
 }

@@ -32,6 +32,18 @@ namespace OOP_1__console_paint_.Canvas.Shapes
             _center = CalculateCenter();
         }
 
+        public static bool IsExist(int xTop, int yTop, int leftSideLength, int baseLength, int rightSideLength)
+        {
+            if (leftSideLength + baseLength <= rightSideLength ||
+                leftSideLength + rightSideLength <= baseLength ||
+                baseLength + rightSideLength <= leftSideLength)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public List<Point> GetVertexPoints()
         {
             List<Point> pointsList = new List<Point>();
@@ -71,16 +83,16 @@ namespace OOP_1__console_paint_.Canvas.Shapes
             return lambda1 >= 0 && lambda2 >= 0 && lambda3 >= 0;
         }
 
-        public List<Point> GetAllPoints()
+        public List<Point> GetAllSidesPoints()
         {
-            if(_allPoints != null)
+            if (_allPoints != null)
             {
                 return _allPoints;
             }
 
             _allPoints = new List<Point>();
-            
-            foreach(Point point in GetPointsFromPoints(_top, _bottomLeft))
+
+            foreach (Point point in GetPointsFromPoints(_top, _bottomLeft))
             {
                 _allPoints.Add(point);
             }
@@ -96,7 +108,7 @@ namespace OOP_1__console_paint_.Canvas.Shapes
             }
 
             return _allPoints;
-        } 
+        }
 
 
         private List<Point> GetPointsFromPoints(Point p1, Point p2)
@@ -134,6 +146,23 @@ namespace OOP_1__console_paint_.Canvas.Shapes
                 }
             }
             return points;
-        } 
+        }
+
+        public int[] GetParameters()
+        {
+            int[] result = new int[5];
+            result[0] = _center.x;
+            result[1] = _center.y;
+            result[2] = _leftSideLength;
+            result[3] = _baseLength;
+            result[4] = _rightSideLength;
+
+            return result;
+        }
+
+        public string GetName()
+        {
+            return new string("Треугольник");
+        }
     }
 }

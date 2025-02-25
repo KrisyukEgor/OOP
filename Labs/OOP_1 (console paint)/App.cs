@@ -17,7 +17,7 @@ namespace OOP_1__console_paint_
         {
             canvas.DrawCanvas();
             //canvas.DrawRectangle(46, 8, 15, 15);
-            //canvas.DrawRectangle(48, 8, 10, 10);
+            canvas.DrawRectangle(48, 8, 10, 10);
             canvas.DrawRectangle(50, 10, 6, 6);
             //canvas.DrawCircle(35, 20, 16)
             //canvas.DrawTriangle(56, 10, 6, 8, 10);

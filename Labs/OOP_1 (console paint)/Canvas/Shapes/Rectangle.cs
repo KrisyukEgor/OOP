@@ -54,7 +54,7 @@ namespace OOP_1__console_paint_.Canvas.Shapes
             return false;
         }
 
-        public List<Point> GetAllPoints()
+        public List<Point> GetAllSidesPoints()
         {
             if(_allPoints != null)
             {
@@ -94,6 +94,22 @@ namespace OOP_1__console_paint_.Canvas.Shapes
             }
 
             return _allPoints;
+        }
+
+        public int[] GetParameters()
+        {
+            int[] result = new int[4];
+            result[0] = _center.x;
+            result[1] = _center.y;
+            result[2] = _width;
+            result[3] = _height;
+
+            return result;
+        }
+
+        public string GetName()
+        {
+            return new string("Прямоугольник");
         }
     }
 }

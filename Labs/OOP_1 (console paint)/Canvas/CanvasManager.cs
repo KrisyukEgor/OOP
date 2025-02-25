@@ -163,6 +163,11 @@ namespace OOP_1__console_paint_.Canvas
 
         public bool DrawTriangle(int xTop, int yTop, int leftSideLength, int baseLength, int rightSideLength)
         {
+            if (!Triangle.IsExist(xTop, yTop, leftSideLength, baseLength, rightSideLength))
+            {
+                return false;
+            }
+
             Triangle triangle = new Triangle(xTop, yTop, leftSideLength, baseLength, rightSideLength);
             _ShapesList.Add(triangle);
 
@@ -199,20 +204,16 @@ namespace OOP_1__console_paint_.Canvas
             }
             return true;
         }
-
-        public void Erase(Point erasePoint)
+        public List<IShape>? GetShapesWhichContainPoint(Point erasePoint)
         {
             erasePoint.y = (int)(erasePoint.y / scale);
-            IShape? shape = _ShapesList.Where(shape => (shape.IsContainPoint(erasePoint))).MinBy(shape =>
-            {
-                Point center = shape.GetCenter();
-
-                int dx = erasePoint.x - center.x;
-                int dy = erasePoint.y - center.y;
-                return dx * dx + dy * dy;
-            });
-
-            List<Point>? points = shape?.GetAllPoints();
+            List<IShape>? shapeList = _ShapesList.Where(shape => (shape.IsContainPoint(erasePoint))).ToList();
+            return shapeList;
+        }
+        public void Erase(IShape shape)
+        {
+            
+            List<Point>? points = shape?.GetAllSidesPoints();
 
             foreach (Point point in points)
             {
