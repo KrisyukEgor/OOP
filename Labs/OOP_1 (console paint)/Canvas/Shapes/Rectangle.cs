@@ -1,4 +1,6 @@
 ﻿
+using OOP_1__console_paint_.Interfaces;
+
 namespace OOP_1__console_paint_.Canvas.Shapes
 {
     public class Rectangle : IShape

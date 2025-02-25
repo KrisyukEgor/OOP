@@ -1,5 +1,6 @@
 ﻿
 using OOP_1__console_paint_.Canvas.Shapes;
+using OOP_1__console_paint_.Interfaces;
 
 
 namespace OOP_1__console_paint_.Canvas
@@ -204,7 +205,6 @@ namespace OOP_1__console_paint_.Canvas
             erasePoint.y = (int)(erasePoint.y / scale);
             IShape? shape = _ShapesList.Where(shape => (shape.IsContainPoint(erasePoint))).MinBy(shape =>
             {
-                
                 Point center = shape.GetCenter();
 
                 int dx = erasePoint.x - center.x;
@@ -226,4 +226,6 @@ namespace OOP_1__console_paint_.Canvas
             }
         }
     }
+
+    
 }

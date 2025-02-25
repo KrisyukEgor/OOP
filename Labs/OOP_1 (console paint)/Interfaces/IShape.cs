@@ -1,5 +1,6 @@
-﻿
-namespace OOP_1__console_paint_.Canvas.Shapes
+﻿using OOP_1__console_paint_.Canvas;
+
+namespace OOP_1__console_paint_.Interfaces
 {
     public interface IShape
     {
