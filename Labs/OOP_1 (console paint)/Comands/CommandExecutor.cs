@@ -1,8 +1,9 @@
 ﻿
-
 using OOP_1__console_paint_.Canvas;
 using OOP_1__console_paint_.Interfaces;
 using OOP_1__console_paint_.TerminalDir;
+
+
 
 namespace OOP_1__console_paint_.Comands
 {
@@ -62,7 +63,7 @@ namespace OOP_1__console_paint_.Comands
             {
                 Console.SetCursorPosition(x, y);
                 key = Console.ReadKey(true).Key;
-
+                
                 switch (key)
                 {
                     case ConsoleKey.LeftArrow:
@@ -118,6 +119,7 @@ namespace OOP_1__console_paint_.Comands
             }
             string? inputNumber;
             int index;
+            
             while (true)
             {
                 inputNumber = terminal.ReadLine();
@@ -132,7 +134,10 @@ namespace OOP_1__console_paint_.Comands
                     try
                     {
                         IShape? shapeToDelete = shapeList?.ElementAt(index - 1);
-                        if (shapeToDelete != null) { canvas.Erase(shapeToDelete); }
+                        if (shapeToDelete != null)
+                        {
+                            canvas.Erase(shapeToDelete);
+                        }
                         break;
                     }
                     catch (ArgumentOutOfRangeException)

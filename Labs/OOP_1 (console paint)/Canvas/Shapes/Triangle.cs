@@ -151,8 +151,8 @@ namespace OOP_1__console_paint_.Canvas.Shapes
         public int[] GetParameters()
         {
             int[] result = new int[5];
-            result[0] = _center.x;
-            result[1] = _center.y;
+            result[0] = _top.x;
+            result[1] = _top.y;
             result[2] = _leftSideLength;
             result[3] = _baseLength;
             result[4] = _rightSideLength;

@@ -1,6 +1,8 @@
 ﻿
 using OOP_1__console_paint_.Canvas.Shapes;
 using OOP_1__console_paint_.Interfaces;
+using OOP_1__console_paint_.TerminalDir;
+using System.Runtime.CompilerServices;
 
 
 namespace OOP_1__console_paint_.Canvas
@@ -69,7 +71,6 @@ namespace OOP_1__console_paint_.Canvas
             Console.SetCursorPosition(0, _height);
             Console.Write("#");
         }
-
         private void DrawSymbol(int x, int y, char symbol)
         {
             y = (int)(y * scale);
@@ -210,9 +211,9 @@ namespace OOP_1__console_paint_.Canvas
             List<IShape>? shapeList = _ShapesList.Where(shape => (shape.IsContainPoint(erasePoint))).ToList();
             return shapeList;
         }
-        public void Erase(IShape shape)
+        public void Erase(IShape? shape)
         {
-            
+
             List<Point>? points = shape?.GetAllSidesPoints();
 
             foreach (Point point in points)
@@ -220,10 +221,59 @@ namespace OOP_1__console_paint_.Canvas
                 Console.SetCursorPosition(point.x, (int)(point.y * scale));
                 Console.Write(' ');
             }
-            
-            if(shape != null)
+
+            if (shape != null)
             {
                 _ShapesList.Remove(shape);
+                RedrawShapesAfterDeleteShape(shape);
+            }
+        }
+
+        private void RedrawShapesAfterDeleteShape(IShape shape) 
+        {
+            List<Point> shapesSidesPoints = shape.GetAllSidesPoints();
+            HashSet<IShape> shapesToRedraw = new HashSet<IShape>();
+
+            foreach (Point point in shapesSidesPoints)
+            {
+                List<IShape>? tempList = GetShapesWhichContainPoint(point);
+
+                if (tempList != null)
+                {
+                    foreach (IShape tempShape in tempList)
+                    {
+                        if (!shapesToRedraw.Contains(tempShape)) 
+                        {
+                            shapesToRedraw.Add(tempShape);
+                        }
+                    }
+                }
+            }
+            Terminal terminal = Terminal.getInstance();
+            terminal.WriteLine($"count {shapesToRedraw.Count}");
+            foreach(IShape shapeToRedraw in shapesToRedraw)
+            {
+                RedrawShape(shapeToRedraw);
+            }
+        }
+
+        private void RedrawShape(IShape shape)
+        {
+
+            int[] parameters = shape.GetParameters();
+
+            if (shape.GetName() == "Круг")
+            {
+                DrawCircle(parameters[0], parameters[1], parameters[2]);
+            }
+            if (shape.GetName() == "Прямоугольник")
+            {
+
+                DrawRectangle(parameters[0], parameters[1], parameters[2], parameters[3]);
+            }
+            if (shape.GetName() == "")
+            {
+                DrawTriangle(parameters[0], parameters[1], parameters[2], parameters[3], parameters[4]);
             }
         }
     }

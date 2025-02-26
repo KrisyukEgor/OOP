@@ -99,8 +99,8 @@ namespace OOP_1__console_paint_.Canvas.Shapes
         public int[] GetParameters()
         {
             int[] result = new int[4];
-            result[0] = _center.x;
-            result[1] = _center.y;
+            result[0] = _topLeft.x;
+            result[1] = _topLeft.y;
             result[2] = _width;
             result[3] = _height;
 
