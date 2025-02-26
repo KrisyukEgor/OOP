@@ -2,6 +2,7 @@
 using OOP_1__console_paint_.Canvas;
 using OOP_1__console_paint_.Interfaces;
 using OOP_1__console_paint_.TerminalDir;
+using System.Runtime.CompilerServices;
 
 
 
@@ -9,13 +10,13 @@ namespace OOP_1__console_paint_.Comands
 {
     public class CommandExecutor
     {
-        Canvas.CanvasManager canvas;
+        Canvas.Canvas canvas;
        
         Terminal terminal;
         
         public CommandExecutor()
         {
-            canvas = Canvas.CanvasManager.getInstance();
+            canvas = Canvas.Canvas.getInstance();
             terminal = Terminal.getInstance();
         }
         public bool DrawCircle(int x, int y, int r)
@@ -53,58 +54,92 @@ namespace OOP_1__console_paint_.Comands
             return false;
         }
 
-        public void ChooseAndEraseShape()
+        public void Erase()
+        {
+            Point point = new Point(10, 10);
+
+            while (point.x != -1 && point.y != -1)
+            {
+                point = canvas.ChoosePoint();
+                IShape? shape = ChooseShape(point);
+                if (shape != null)
+                {
+                    canvas.Erase(shape);
+                }
+            }
+        }
+
+        public void Move()
+        {
+            IShape? shape = null;
+            while(shape == null)
+            {
+                Point point = canvas.ChoosePoint();
+
+                if (point.x == -1 && point.y == -1)
+                {
+                    return;
+                }
+                shape = ChooseShape(point);
+            }
+            terminal.WriteLine($"{shape.GetName()}");
+            StartMove(shape);
+        }
+        private void StartMove(IShape shape)
         {
             ConsoleKey key;
-            int x = (int)(canvas.Width / 2);
-            int y = (int)(canvas.Height / 2);
-
+            IShape? movingShape = shape;
+            
             do
             {
-                Console.SetCursorPosition(x, y);
+                Console.SetCursorPosition(movingShape.GetCenter().x, movingShape.GetCenter().y);
                 key = Console.ReadKey(true).Key;
                 
                 switch (key)
                 {
                     case ConsoleKey.LeftArrow:
-                        if (x > 1) x--;
+                        movingShape = canvas.MoveLeft(movingShape);
                         break;
                     case ConsoleKey.RightArrow:
-                        if (x < canvas.Width - 2) x++;
+                        movingShape = canvas.MoveRight(movingShape);
                         break;
                     case ConsoleKey.UpArrow:
-                        if (y > 0) y--;
+                        movingShape = canvas.MoveUp(movingShape);
                         break;
                     case ConsoleKey.DownArrow:
-                        if (y < canvas.Height - 1) y++;
-                        break;
-                    case ConsoleKey.Enter:
-                        EraseItem(new Point(x, y));
+                        movingShape = canvas.MoveDown(movingShape);
                         break;
 
                 }
+                
             } while (key != ConsoleKey.Escape);
 
         }
-        private void EraseItem(Point point)
+
+        private IShape MoveRight(IShape shape)
         {
 
-            List<IShape>? shapeList = canvas.GetShapesWhichContainPoint(point);
-            if(shapeList == null || shapeList.Count == 0)
+            IShape newShape = canvas.MoveRight(shape);
+            return newShape;
+        }
+        private IShape? ChooseShape(Point point)
+        {
+            List<IShape> shapeList = canvas.GetShapesWhichContainPoint(point);
+
+            if (shapeList.Count == 0)
             {
-                return;
+                return null;
             }
             if (shapeList?.Count == 1)
             {
-                canvas.Erase(shapeList[0]);
-                return;
+                return shapeList[0];
             }
 
-            terminal.WriteLine("Введите номер фигуры, который хотите удалить");
-            for(int i = 0; i < shapeList?.Count; i++)
+            terminal.WriteLine("Введите номер фигуры");
+            for (int i = 0; i < shapeList?.Count; i++)
             {
                 IShape shape = shapeList[i];
-                terminal.Write($"{i + 1}. {shape.GetName()} с центром в точке ({shape.GetCenter().x}, {(int)(shape.GetCenter().y * 0.5)}) и сторонами (радиусом): ");
+                terminal.Write($"{i + 1}. {shape.GetName()} с центром в точке ({shape.GetCenter().x}, {shape.GetCenter().y}) и сторонами (радиусом): ");
 
                 int[] parameters = shape.GetParameters();
                 for (int j = 2; j < parameters.Length; j++)
@@ -119,7 +154,7 @@ namespace OOP_1__console_paint_.Comands
             }
             string? inputNumber;
             int index;
-            
+            IShape? choosedShape;
             while (true)
             {
                 inputNumber = terminal.ReadLine();
@@ -133,12 +168,12 @@ namespace OOP_1__console_paint_.Comands
                 {
                     try
                     {
-                        IShape? shapeToDelete = shapeList?.ElementAt(index - 1);
-                        if (shapeToDelete != null)
+                        choosedShape = shapeList?.ElementAt(index - 1);
+                        if (choosedShape != null)
                         {
-                            canvas.Erase(shapeToDelete);
+                            break;
                         }
-                        break;
+                        
                     }
                     catch (ArgumentOutOfRangeException)
                     {
@@ -147,7 +182,9 @@ namespace OOP_1__console_paint_.Comands
                 }
             }
 
+            return choosedShape;
         }
+
         public void WriteHelp()
         {
             terminal.WriteLine("\n===================================\n Команды \n");

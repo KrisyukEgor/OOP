@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 
 namespace OOP_1__console_paint_.Canvas
 {
-    public class CanvasManager
+    public class Canvas
     {
         private int _width = 120;
         private int _height = 24;
@@ -15,12 +15,12 @@ namespace OOP_1__console_paint_.Canvas
 
         private List<IShape> _ShapesList = new List<IShape>();
 
-        private static CanvasManager? instanse;
-        public static CanvasManager getInstance()
+        private static Canvas? instanse;
+        public static Canvas getInstance()
         {
             if (instanse == null)
             {
-                instanse = new CanvasManager();
+                instanse = new Canvas();
             }
             return instanse;
         }
@@ -71,9 +71,13 @@ namespace OOP_1__console_paint_.Canvas
             Console.SetCursorPosition(0, _height);
             Console.Write("#");
         }
+        private void ScalePoint(Point point)
+        {
+
+        }
         private void DrawSymbol(int x, int y, char symbol)
         {
-            y = (int)(y * scale);
+
             Console.SetCursorPosition(x, y);
             Console.Write(symbol);
         }
@@ -120,11 +124,11 @@ namespace OOP_1__console_paint_.Canvas
             }
         }
 
-        private bool CanDraw(List<Point> pointList)
+        public bool CanDraw(List<Point> pointList)
         {
             foreach (Point point in pointList)
             {
-                if ((point.x <= 0 || point.y <= 0) || (point.x >= _width || point.y >= _height / scale))
+                if ((point.x <= 0 || point.y <= 0) || (point.x >= _width - 1 || point.y >= _height))
                 {
                     return false;
                 }
@@ -134,15 +138,15 @@ namespace OOP_1__console_paint_.Canvas
         public bool DrawRectangle(int xTop, int yTop, int width, int height)
         {
             Rectangle rectangle = new Rectangle(xTop, yTop, width, height);
-            _ShapesList.Add(rectangle);
 
             List<Point> pointList = rectangle.GetVertexPoints();
             if (!CanDraw(pointList))
             {
                 return false;
             }
-            
-           
+
+            _ShapesList.Add(rectangle);
+
             Point topLeftPoint = pointList[0];
             Point topRightPoint = pointList[1];
             Point bottomRightPoint = pointList[2];
@@ -170,13 +174,13 @@ namespace OOP_1__console_paint_.Canvas
             }
 
             Triangle triangle = new Triangle(xTop, yTop, leftSideLength, baseLength, rightSideLength);
-            _ShapesList.Add(triangle);
-
             List<Point> pointList = triangle.GetVertexPoints();
             if (!CanDraw(pointList))
             {
                 return false;
             }
+
+            _ShapesList.Add(triangle);
             Point top = pointList[0];
             Point rightBottom = pointList[1];
             Point leftBottom = pointList[2];
@@ -191,24 +195,24 @@ namespace OOP_1__console_paint_.Canvas
         public bool DrawCircle(int xCenter, int yCenter, int radius)
         {
             Circle circle = new Circle(xCenter, yCenter, radius);
-            _ShapesList.Add(circle);
-
             List<Point> pointList = circle.GetVertexPoints();
+
             if (!CanDraw(pointList))
             {
                 return false;
             }
-
+            _ShapesList.Add(circle);
             foreach (Point point in pointList)
             {
                 DrawSymbol(point.x, point.y, '.');
             }
             return true;
         }
-        public List<IShape>? GetShapesWhichContainPoint(Point erasePoint)
+
+
+        public List<IShape> GetShapesWhichContainPoint(Point erasePoint)
         {
-            erasePoint.y = (int)(erasePoint.y / scale);
-            List<IShape>? shapeList = _ShapesList.Where(shape => (shape.IsContainPoint(erasePoint))).ToList();
+            List<IShape> shapeList = _ShapesList.Where(shape => (shape.IsContainPoint(erasePoint))).ToList();
             return shapeList;
         }
         public void Erase(IShape? shape)
@@ -218,7 +222,7 @@ namespace OOP_1__console_paint_.Canvas
 
             foreach (Point point in points)
             {
-                Console.SetCursorPosition(point.x, (int)(point.y * scale));
+                Console.SetCursorPosition(point.x, point.y);
                 Console.Write(' ');
             }
 
@@ -229,7 +233,7 @@ namespace OOP_1__console_paint_.Canvas
             }
         }
 
-        private void RedrawShapesAfterDeleteShape(IShape shape) 
+        private void RedrawShapesAfterDeleteShape(IShape shape)
         {
             List<Point> shapesSidesPoints = shape.GetAllSidesPoints();
             HashSet<IShape> shapesToRedraw = new HashSet<IShape>();
@@ -242,41 +246,160 @@ namespace OOP_1__console_paint_.Canvas
                 {
                     foreach (IShape tempShape in tempList)
                     {
-                        if (!shapesToRedraw.Contains(tempShape)) 
+                        if (!shapesToRedraw.Contains(tempShape))
                         {
                             shapesToRedraw.Add(tempShape);
                         }
                     }
                 }
             }
-            Terminal terminal = Terminal.getInstance();
-            terminal.WriteLine($"count {shapesToRedraw.Count}");
-            foreach(IShape shapeToRedraw in shapesToRedraw)
+
+            foreach (IShape shapeToRedraw in shapesToRedraw)
             {
-                RedrawShape(shapeToRedraw);
+                RedrawShape(shapeToRedraw.GetName(), shapeToRedraw.GetParameters());
             }
         }
 
-        private void RedrawShape(IShape shape)
+        private void RedrawShape(string shapeName, int[] parameters)
         {
+            RedrawWithoutDelete(shapeName, parameters);
+            _ShapesList.RemoveAt(_ShapesList.Count - 1);
+        }
 
-            int[] parameters = shape.GetParameters();
-
-            if (shape.GetName() == "Круг")
+        private void RedrawWithoutDelete(string shapeName, int[] parameters)
+        {
+            if (shapeName == "Круг")
             {
                 DrawCircle(parameters[0], parameters[1], parameters[2]);
             }
-            if (shape.GetName() == "Прямоугольник")
+            else if (shapeName == "Прямоугольник")
             {
 
                 DrawRectangle(parameters[0], parameters[1], parameters[2], parameters[3]);
             }
-            if (shape.GetName() == "")
+            else if (shapeName == "Треугольник")
             {
                 DrawTriangle(parameters[0], parameters[1], parameters[2], parameters[3], parameters[4]);
             }
         }
-    }
 
-    
+        public Point ChoosePoint()
+        {
+            ConsoleKey key;
+            int x = (int)(Width / 2);
+            int y = (int)(Height / 2);
+
+            do
+            {
+                Console.SetCursorPosition(x, y);
+                key = Console.ReadKey(true).Key;
+
+                switch (key)
+                {
+                    case ConsoleKey.LeftArrow:
+                        if (x > 1) x--;
+                        break;
+                    case ConsoleKey.RightArrow:
+                        if (x < Width - 2) x++;
+                        break;
+                    case ConsoleKey.UpArrow:
+                        if (y > 0) y--;
+                        break;
+                    case ConsoleKey.DownArrow:
+                        if (y < Height - 1) y++;
+                        break;
+                    case ConsoleKey.Enter:
+                        return new Point(x, y);
+
+                }
+            } while (key != ConsoleKey.Escape);
+            return new Point(-1, -1);
+        }
+
+        public IShape MoveRight(IShape shape)
+        {
+
+            int[] parameters = shape.GetParameters();
+            string shapeName = shape.GetName();
+            List<Point> pointList = new List<Point>(shape.GetVertexPoints());
+
+            foreach (Point point in pointList)
+            {
+                point.x++;
+            }
+            if (CanDraw(pointList))
+            {
+                parameters[0]++;
+                Erase(shape);
+                RedrawWithoutDelete(shapeName, parameters);
+            }
+            else { return shape; }
+
+            return _ShapesList.ElementAt(_ShapesList.Count - 1);
+        }
+
+        public IShape MoveLeft(IShape shape)
+        {
+
+            int[] parameters = shape.GetParameters();
+            string shapeName = shape.GetName();
+            List<Point> pointList = new List<Point>(shape.GetVertexPoints());
+
+            foreach (Point point in pointList)
+            {
+                point.x--;
+            }
+            if (CanDraw(pointList))
+            {
+                parameters[0]--;
+                Erase(shape);
+                RedrawWithoutDelete(shapeName, parameters);
+            }
+            else { return shape; }
+            return _ShapesList.ElementAt(_ShapesList.Count - 1);
+        }
+
+        public IShape MoveUp(IShape shape)
+        {
+
+            int[] parameters = shape.GetParameters();
+            string shapeName = shape.GetName();
+            List<Point> pointList = new List<Point>(shape.GetVertexPoints());
+
+            foreach (Point point in pointList)
+            {
+                point.y--;
+            }
+            if (CanDraw(pointList))
+            {
+                parameters[1]--;
+                Erase(shape);
+                RedrawWithoutDelete(shapeName, parameters);
+            }
+            else { return shape; }
+            return _ShapesList.ElementAt(_ShapesList.Count - 1);
+        }
+
+        public IShape MoveDown(IShape shape)
+        {
+
+            int[] parameters = shape.GetParameters();
+            string shapeName = shape.GetName();
+            List<Point> pointList = new List<Point>(shape.GetVertexPoints());
+
+            foreach (Point point in pointList)
+            {
+                point.y++;
+            }
+            if (CanDraw(pointList))
+            {
+                parameters[1] ++;
+                Erase(shape);
+                RedrawWithoutDelete(shapeName, parameters);
+            }
+            else { return shape; }
+            return _ShapesList.ElementAt(_ShapesList.Count - 1);
+        }
+
+    }
 }

@@ -7,11 +7,11 @@ namespace OOP_1__console_paint_
     public class App
     {
         private CommandManager comandManager;
-        private Canvas.CanvasManager canvas;
+        private Canvas.Canvas canvas;
         public App() 
         {
             comandManager = new CommandManager();
-            canvas = Canvas.CanvasManager.getInstance();
+            canvas = Canvas.Canvas.getInstance();
         }
         public void Start()
         {

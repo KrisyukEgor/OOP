@@ -16,7 +16,8 @@ namespace OOP_1__console_paint_.Comands
                 { "/drawrect", (Func<int, int, int, int, bool>)((x, y, w, h) => executor.DrawRectangle(x, y, w, h))},
                 { "/drawtriangle", (Func<int, int, int, int, int, bool>)((x, y, ls, bs, rs) => executor.DrawTriangle(x, y, ls, bs, rs)) },
 
-                { "/erase", (Action)(() => executor.ChooseAndEraseShape())},
+                { "/erase", (Action)(() => executor.Erase())},
+                { "/move", (Action)(() => executor.Move())},
                 { "/help", (Action)(() => executor.WriteHelp()) },
                 { "/exit", (Action)(() => executor.Exit()) },
                 { "/undo", (Action)(() => executor.Undo()) },

@@ -5,13 +5,13 @@ namespace OOP_1__console_paint_.Comands
     public class CommandManager
     { 
         CommandDictionary commandDictionary;
-        Canvas.CanvasManager canvas;
+        Canvas.Canvas canvas;
         CommandExecutor executor;
         
         Terminal terminal;
         public CommandManager()
         {
-            canvas = Canvas.CanvasManager.getInstance();
+            canvas = Canvas.Canvas.getInstance();
             executor = new CommandExecutor();
             commandDictionary = new CommandDictionary(executor);
             terminal = Terminal.getInstance();
