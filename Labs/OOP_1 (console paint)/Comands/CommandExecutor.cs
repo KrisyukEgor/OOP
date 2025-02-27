@@ -82,7 +82,7 @@ namespace OOP_1__console_paint_.Comands
                 }
                 shape = ChooseShape(point);
             }
-            terminal.WriteLine($"{shape.GetName()}");
+            
             StartMove(shape);
         }
         private void StartMove(IShape shape)
@@ -92,7 +92,8 @@ namespace OOP_1__console_paint_.Comands
             
             do
             {
-                Console.SetCursorPosition(movingShape.GetCenter().x, movingShape.GetCenter().y);
+                var (cursorX, cursorY) = canvas.GetScaledPoint(movingShape.GetCenter().x, movingShape.GetCenter().y);
+                Console.SetCursorPosition(cursorX, cursorY);
                 key = Console.ReadKey(true).Key;
                 
                 switch (key)
@@ -116,15 +117,10 @@ namespace OOP_1__console_paint_.Comands
 
         }
 
-        private IShape MoveRight(IShape shape)
-        {
-
-            IShape newShape = canvas.MoveRight(shape);
-            return newShape;
-        }
         private IShape? ChooseShape(Point point)
         {
-            List<IShape> shapeList = canvas.GetShapesWhichContainPoint(point);
+            var (consoleX, consoleY) = canvas.GetUnscaledPoint(point.x, point.y);
+            List<IShape> shapeList = canvas.GetShapesWhichContainPoint(new Point(consoleX, consoleY));
 
             if (shapeList.Count == 0)
             {

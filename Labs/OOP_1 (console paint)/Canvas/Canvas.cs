@@ -11,7 +11,6 @@ namespace OOP_1__console_paint_.Canvas
     {
         private int _width = 120;
         private int _height = 24;
-        private double scale = 0.5;
 
         private List<IShape> _ShapesList = new List<IShape>();
 
@@ -71,13 +70,17 @@ namespace OOP_1__console_paint_.Canvas
             Console.SetCursorPosition(0, _height);
             Console.Write("#");
         }
-        private void ScalePoint(Point point)
+        public (int, int) GetScaledPoint(int x, int y)
         {
-
+            return (x * 2, y);
+        }
+        public (int, int) GetUnscaledPoint(int x, int y)
+        {
+            return (x / 2, y);
         }
         private void DrawSymbol(int x, int y, char symbol)
         {
-
+            (x, y) = GetScaledPoint(x, y);
             Console.SetCursorPosition(x, y);
             Console.Write(symbol);
         }
@@ -128,7 +131,10 @@ namespace OOP_1__console_paint_.Canvas
         {
             foreach (Point point in pointList)
             {
-                if ((point.x <= 0 || point.y <= 0) || (point.x >= _width - 1 || point.y >= _height))
+
+                var (consoleX, consoleY) = GetScaledPoint(point.x, point.y);
+                
+                if ((consoleX <= 0 || consoleY <= 0) || (consoleX >= _width - 1 || consoleY >= _height))
                 {
                     return false;
                 }
@@ -209,12 +215,13 @@ namespace OOP_1__console_paint_.Canvas
             return true;
         }
 
-
         public List<IShape> GetShapesWhichContainPoint(Point erasePoint)
         {
+ 
             List<IShape> shapeList = _ShapesList.Where(shape => (shape.IsContainPoint(erasePoint))).ToList();
             return shapeList;
         }
+
         public void Erase(IShape? shape)
         {
 
@@ -222,7 +229,8 @@ namespace OOP_1__console_paint_.Canvas
 
             foreach (Point point in points)
             {
-                Console.SetCursorPosition(point.x, point.y);
+                var (consoleX, consoleY) = GetScaledPoint(point.x, point.y);
+                Console.SetCursorPosition(consoleX, consoleY);
                 Console.Write(' ');
             }
 
@@ -318,38 +326,40 @@ namespace OOP_1__console_paint_.Canvas
 
         public IShape MoveRight(IShape shape)
         {
-
             int[] parameters = shape.GetParameters();
             string shapeName = shape.GetName();
             List<Point> pointList = new List<Point>(shape.GetVertexPoints());
 
+            List<Point> newPointList = new List<Point>();
             foreach (Point point in pointList)
             {
-                point.x++;
+                newPointList.Add(new Point(point.x + 1, point.y));
             }
-            if (CanDraw(pointList))
+
+            if (CanDraw(newPointList))
             {
                 parameters[0]++;
-                Erase(shape);
-                RedrawWithoutDelete(shapeName, parameters);
+                Erase(shape); 
+                RedrawWithoutDelete(shapeName, parameters); 
             }
             else { return shape; }
-
             return _ShapesList.ElementAt(_ShapesList.Count - 1);
         }
 
+
         public IShape MoveLeft(IShape shape)
         {
-
             int[] parameters = shape.GetParameters();
             string shapeName = shape.GetName();
             List<Point> pointList = new List<Point>(shape.GetVertexPoints());
 
+            List<Point> newPointList = new List<Point>();
             foreach (Point point in pointList)
             {
-                point.x--;
+                newPointList.Add(new Point(point.x - 1, point.y));
             }
-            if (CanDraw(pointList))
+
+            if (CanDraw(newPointList))
             {
                 parameters[0]--;
                 Erase(shape);
@@ -361,16 +371,17 @@ namespace OOP_1__console_paint_.Canvas
 
         public IShape MoveUp(IShape shape)
         {
-
             int[] parameters = shape.GetParameters();
             string shapeName = shape.GetName();
             List<Point> pointList = new List<Point>(shape.GetVertexPoints());
 
+            List<Point> newPointList = new List<Point>();
             foreach (Point point in pointList)
             {
-                point.y--;
+                newPointList.Add(new Point(point.x, point.y - 1));
             }
-            if (CanDraw(pointList))
+
+            if (CanDraw(newPointList))
             {
                 parameters[1]--;
                 Erase(shape);
@@ -382,18 +393,19 @@ namespace OOP_1__console_paint_.Canvas
 
         public IShape MoveDown(IShape shape)
         {
-
             int[] parameters = shape.GetParameters();
             string shapeName = shape.GetName();
             List<Point> pointList = new List<Point>(shape.GetVertexPoints());
 
+            List<Point> newPointList = new List<Point>();
             foreach (Point point in pointList)
             {
-                point.y++;
+                newPointList.Add(new Point(point.x, point.y + 1));
             }
-            if (CanDraw(pointList))
+
+            if (CanDraw(newPointList))
             {
-                parameters[1] ++;
+                parameters[1]++;
                 Erase(shape);
                 RedrawWithoutDelete(shapeName, parameters);
             }

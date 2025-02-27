@@ -29,10 +29,9 @@ namespace OOP_1__console_paint_.Canvas.Shapes
 
         public bool IsContainPoint(Point point)
         {
-            Console.WriteLine($"pointx ({point.x}, {point.y} )");
             if((point.x >= _center.x - _radius && point.x <= _center.x + _radius) && (point.y >= _center.y - _radius && point.y <= _center.y + _radius))
             {
-                Console.WriteLine("true");
+              
                 return true;
             }
             return false;
