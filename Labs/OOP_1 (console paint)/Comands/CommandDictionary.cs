@@ -12,15 +12,18 @@ namespace OOP_1__console_paint_.Comands
 
             _dictionary = new Dictionary<string, Delegate> {
                 { "/drawcircle", (Func<int, int, int, bool>)((x, y, r) => executor.DrawCircle(x, y ,r))},
-                { "/drawsquare", (Func<int, int, int, bool>)((x, y, length) => executor.DrawSquare(x, y, length))},
+                { "/drawsquare", (Func<int, int, int, bool>)((x, y, length) => executor.DrawRectangle(x, y, length, length))},
                 { "/drawrect", (Func<int, int, int, int, bool>)((x, y, w, h) => executor.DrawRectangle(x, y, w, h))},
                 { "/drawtriangle", (Func<int, int, int, int, int, bool>)((x, y, ls, bs, rs) => executor.DrawTriangle(x, y, ls, bs, rs)) },
 
                 { "/erase", (Action)(() => executor.Erase())},
                 { "/move", (Action)(() => executor.Move())},
+                 { "/setbgcolor", (Action)(() => executor.SetBgColor())},
                 { "/help", (Action)(() => executor.WriteHelp()) },
                 { "/exit", (Action)(() => executor.Exit()) },
                 { "/undo", (Action)(() => executor.Undo()) },
+                { "/redo", (Action)(() => executor.Redo()) }
+
             };
         }
 

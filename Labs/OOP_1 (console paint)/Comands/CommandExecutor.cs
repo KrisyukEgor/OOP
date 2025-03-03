@@ -1,35 +1,27 @@
-﻿
-using OOP_1__console_paint_.Canvas;
+﻿using OOP_1__console_paint_.Canvas;
+using OOP_1__console_paint_.Canvas.Shapes;
 using OOP_1__console_paint_.Interfaces;
 using OOP_1__console_paint_.TerminalDir;
-using System.Runtime.CompilerServices;
-
-
 
 namespace OOP_1__console_paint_.Comands
 {
     public class CommandExecutor
     {
-        Canvas.Canvas canvas;
-       
+        CanvasManager canvas;
+        CanvasTransformer canvasTransformer;
         Terminal terminal;
+        UserInputHandler userInputHandler;
         
         public CommandExecutor()
         {
-            canvas = Canvas.Canvas.getInstance();
+            canvas = CanvasManager.getInstance();
             terminal = Terminal.getInstance();
+            canvasTransformer = new CanvasTransformer();
+            userInputHandler = new UserInputHandler();
         }
         public bool DrawCircle(int x, int y, int r)
         {
             if(canvas.DrawCircle(x, y, r))
-            {
-                return true;
-            }
-            return false;
-        }
-        public bool DrawSquare(int x, int y, int length)
-        {
-            if (canvas.DrawSquare(x, y, length))
             {
                 return true;
             }
@@ -60,10 +52,11 @@ namespace OOP_1__console_paint_.Comands
 
             while (point.x != -1 && point.y != -1)
             {
-                point = canvas.ChoosePoint();
-                IShape? shape = ChooseShape(point);
+                point = userInputHandler.ChoosePoint();
+                IShape? shape = userInputHandler.ChooseShape(point);
+
                 if (shape != null)
-                {
+                { 
                     canvas.Erase(shape);
                 }
             }
@@ -74,17 +67,39 @@ namespace OOP_1__console_paint_.Comands
             IShape? shape = null;
             while(shape == null)
             {
-                Point point = canvas.ChoosePoint();
+                Point point = userInputHandler.ChoosePoint();
 
                 if (point.x == -1 && point.y == -1)
                 {
                     return;
                 }
-                shape = ChooseShape(point);
+                shape = userInputHandler.ChooseShape(point);
             }
             
             StartMove(shape);
         }
+
+        public void SetBgColor()
+        {
+            IShape? shape = null;
+            while (shape == null)
+            {
+                Point point = userInputHandler.ChoosePoint();
+
+                if (point.x == -1 && point.y == -1)
+                {
+                    return;
+                }
+                shape = userInputHandler.ChooseShape(point);
+            }
+
+            terminal.WriteLine("Введите символ");
+            char symbol = terminal.ReadLine()[0];
+
+            canvas.SetShapeBackground(shape, symbol);
+
+        }
+
         private void StartMove(IShape shape)
         {
             ConsoleKey key;
@@ -92,7 +107,7 @@ namespace OOP_1__console_paint_.Comands
             
             do
             {
-                var (cursorX, cursorY) = canvas.GetScaledPoint(movingShape.GetCenter().x, movingShape.GetCenter().y);
+                var (cursorX, cursorY) = canvasTransformer.GetScaledPoint(movingShape.GetCenter().x, movingShape.GetCenter().y);
                 Console.SetCursorPosition(cursorX, cursorY);
                 key = Console.ReadKey(true).Key;
                 
@@ -112,73 +127,10 @@ namespace OOP_1__console_paint_.Comands
                         break;
 
                 }
+
                 
             } while (key != ConsoleKey.Escape);
 
-        }
-
-        private IShape? ChooseShape(Point point)
-        {
-            var (consoleX, consoleY) = canvas.GetUnscaledPoint(point.x, point.y);
-            List<IShape> shapeList = canvas.GetShapesWhichContainPoint(new Point(consoleX, consoleY));
-
-            if (shapeList.Count == 0)
-            {
-                return null;
-            }
-            if (shapeList?.Count == 1)
-            {
-                return shapeList[0];
-            }
-
-            terminal.WriteLine("Введите номер фигуры");
-            for (int i = 0; i < shapeList?.Count; i++)
-            {
-                IShape shape = shapeList[i];
-                terminal.Write($"{i + 1}. {shape.GetName()} с центром в точке ({shape.GetCenter().x}, {shape.GetCenter().y}) и сторонами (радиусом): ");
-
-                int[] parameters = shape.GetParameters();
-                for (int j = 2; j < parameters.Length; j++)
-                {
-                    terminal.Write($"{parameters[j]}");
-                    if (j != parameters.Length - 1)
-                    {
-                        terminal.Write(", ");
-                    }
-                }
-                terminal.WriteLine();
-            }
-            string? inputNumber;
-            int index;
-            IShape? choosedShape;
-            while (true)
-            {
-                inputNumber = terminal.ReadLine();
-                index = TerminalParser.ParseStringToInt(inputNumber);
-
-                if (index == -1)
-                {
-                    terminal.WriteLine("Некорректное число, введите заново");
-                }
-                else
-                {
-                    try
-                    {
-                        choosedShape = shapeList?.ElementAt(index - 1);
-                        if (choosedShape != null)
-                        {
-                            break;
-                        }
-                        
-                    }
-                    catch (ArgumentOutOfRangeException)
-                    {
-                        terminal.WriteLine("Выберите число из диапазона");
-                    }
-                }
-            }
-
-            return choosedShape;
         }
 
         public void WriteHelp()
@@ -186,7 +138,7 @@ namespace OOP_1__console_paint_.Comands
             terminal.WriteLine("\n===================================\n Команды \n");
             terminal.WriteLine("/drawSquare");
             terminal.WriteLine("/drawTriangle");
-            terminal.WriteLine("/drawRectangle");
+            terminal.WriteLine("/drawRect");
             terminal.WriteLine("/drawCircle");
 
             terminal.WriteLine("\n/cls: Очищает командную строку");
@@ -199,10 +151,14 @@ namespace OOP_1__console_paint_.Comands
             terminal.WriteLine("Выход из программы...");
             Environment.Exit(0);
         }
-
         public void Undo()
         {
-           
+
+        }
+
+        public void Redo()
+        {
+
         }
     }
 }

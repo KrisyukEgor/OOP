@@ -5,20 +5,26 @@ namespace OOP_1__console_paint_.Comands
     public class CommandManager
     { 
         CommandDictionary commandDictionary;
-        Canvas.Canvas canvas;
+        Canvas.CanvasManager canvas;
         CommandExecutor executor;
-        
+
+        Stack<Action> undoStack;
+        Stack<Action> redoStack;
+
         Terminal terminal;
         public CommandManager()
         {
-            canvas = Canvas.Canvas.getInstance();
+            canvas = Canvas.CanvasManager.getInstance();
             executor = new CommandExecutor();
             commandDictionary = new CommandDictionary(executor);
             terminal = Terminal.getInstance();
+
+            undoStack = new Stack<Action>();
+            redoStack = new Stack<Action>();
         }
         public void Start()
         {
-            terminal.WriteLine("Введите операцию (все команды /help)");
+            terminal.WriteLine("Введите операцию (все команды начинаются с /)");
             string? input;
              
             while(true)
@@ -57,30 +63,36 @@ namespace OOP_1__console_paint_.Comands
 
             try
             {
+                Action? currentAction = null;
+
                 switch (action)
                 {
                     case Func<int, int, int, bool> threeParam when args?.Length == 3:
-                        if (!threeParam(args[0], args[1], args[2]))
-                            terminal.WriteLine("Ошибка: фигура выходит за границы холста");
+                        currentAction = () => { if (!threeParam(args[0], args[1], args[2])) terminal.WriteLine("Ошибка: фигура выходит за границы холста"); };
                         break;
 
                     case Func<int, int, int, int, bool> fourParam when args?.Length == 4:
-                        if (!fourParam(args[0], args[1], args[2], args[3]))
-                            terminal.WriteLine("Ошибка: фигура выходит за границы холста");
+                        currentAction = () => { if (!fourParam(args[0], args[1], args[2], args[3])) terminal.WriteLine("Ошибка: фигура выходит за границы холста"); };
                         break;
 
                     case Func<int, int, int, int, int, bool> fiveParam when args?.Length == 5:
-                        if (!fiveParam(args[0], args[1], args[2], args[3], args[4]))
-                            terminal.WriteLine("Ошибка: фигура выходит за границы холста");
+                        currentAction = () => { if (!fiveParam(args[0], args[1], args[2], args[3], args[4])) terminal.WriteLine("Ошибка: фигура выходит за границы холста"); };
                         break;
 
                     case Action noParam when args == null:
-                        noParam();
+                        currentAction = noParam;
                         break;
 
                     default:
                         terminal.WriteLine("Ошибка: неверное количество аргументов");
-                        break;
+                        return;
+                }
+
+                if (currentAction != null)
+                {
+                    undoStack.Push(currentAction);
+                    redoStack.Clear(); 
+                    currentAction();
                 }
             }
             catch (Exception ex)
@@ -89,5 +101,35 @@ namespace OOP_1__console_paint_.Comands
             }
         }
 
+        public void Undo()
+        {
+            if (undoStack.Count > 0)
+            {
+                var lastAction = undoStack.Pop();
+                redoStack.Push(lastAction);
+                terminal.WriteLine("Отменено последнее действие.");
+
+            }
+            else
+            {
+                terminal.WriteLine("Нет действий для отмены.");
+            }
+        }
+
+        public void Redo()
+        {
+            if (redoStack.Count > 0)
+            {
+                var lastUndoneAction = redoStack.Pop();
+                undoStack.Push(lastUndoneAction);
+                terminal.WriteLine("Повторено последнее отменённое действие.");
+
+                lastUndoneAction();
+            }
+            else
+            {
+                terminal.WriteLine("Нет действий для повтора.");
+            }
+        }
     }
 }

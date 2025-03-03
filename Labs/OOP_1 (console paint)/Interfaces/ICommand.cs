@@ -3,7 +3,7 @@
 {
     public interface ICommand
     {
-        void Execute();
+        bool Execute();
         void UnExecute();
     }
 }

@@ -1,5 +1,4 @@
-﻿
-using OOP_1__console_paint_.Interfaces;
+﻿using OOP_1__console_paint_.Interfaces;
 
 namespace OOP_1__console_paint_.Canvas.Shapes
 {
@@ -18,6 +17,7 @@ namespace OOP_1__console_paint_.Canvas.Shapes
             this._width = width;
             this._height = height;
             _center = CalculateCenter();
+            BackgroundSymbol = ' ';
         }
 
         public List<Point> GetVertexPoints()
@@ -46,13 +46,10 @@ namespace OOP_1__console_paint_.Canvas.Shapes
 
         public bool IsContainPoint(Point point)
         {
-            if ((point.x >= _topLeft.x && point.x <= _topLeft.x + _width ) && (point.y >= _topLeft.y && point.y <= _topLeft.y + _height))
-            {
-                return true;
-            }
-
-            return false;
+            return (point.x >= _topLeft.x && point.x <= _topLeft.x + _width) &&
+                   (point.y >= _topLeft.y && point.y <= _topLeft.y + _height);
         }
+
 
         public List<Point> GetAllSidesPoints()
         {
@@ -107,9 +104,34 @@ namespace OOP_1__console_paint_.Canvas.Shapes
             return result;
         }
 
-        public string GetName()
+        public char BackgroundSymbol { get; set; }
+
+        public List<Point> GetPointsInside()
         {
-            return new string("Прямоугольник");
+
+            int minX = _topLeft.x;
+            int maxX = _topLeft.x + _width - 1;
+            int minY = _topLeft.y;
+            int maxY = _topLeft.y + _height - 1;
+
+            List<Point> borderPoints = GetAllSidesPoints();
+            HashSet<Point> borderSet = new HashSet<Point>(borderPoints);
+
+            List<Point> result = new List<Point>();
+            for (int y = minY; y <= maxY; y++)
+            {
+                for (int x = minX; x <= maxX; x++)
+                {
+                    Point p = new Point(x, y);
+
+                    if (!borderSet.Contains(p) && IsContainPoint(p))
+                    {
+                        result.Add(p);
+                    }
+                }
+            }
+
+            return result;
         }
     }
 }

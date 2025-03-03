@@ -13,7 +13,7 @@
             }
             return instance;
         }
-
+        private Terminal() { }
         public void Write(string message)
         {
             Console.SetCursorPosition(cursorX, cursorY);

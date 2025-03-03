@@ -1,5 +1,4 @@
-﻿
-using OOP_1__console_paint_.Interfaces;
+﻿using OOP_1__console_paint_.Interfaces;
 
 namespace OOP_1__console_paint_.Canvas.Shapes
 {
@@ -23,13 +22,9 @@ namespace OOP_1__console_paint_.Canvas.Shapes
             this._leftSideLength = leftSideLength;
             this._baseLength = baseLength;
 
-            double tempX = ((_leftSideLength * _leftSideLength + _baseLength * _baseLength - _rightSideLength * _rightSideLength) / (2 * _baseLength));
-            double tempY = Math.Sqrt(_leftSideLength * _leftSideLength - (tempX * tempX));
-
-            this._bottomLeft = new Point((int)(_top.x - tempX), (int)(_top.y + tempY));
-            this._bottomRight = new Point((int)(_top.x - tempX + _baseLength), (int)(_top.y + tempY));
-
+            CalculateBottomPoints();
             _center = CalculateCenter();
+            BackgroundSymbol = ' ';
         }
 
         public static bool IsExist(int xTop, int yTop, int leftSideLength, int baseLength, int rightSideLength)
@@ -66,6 +61,15 @@ namespace OOP_1__console_paint_.Canvas.Shapes
             int yCenter = (int)((_top.y + _bottomLeft.y + _bottomRight.y) / 3);
             Point center = new Point(xCenter, yCenter);
             return center;
+        }
+
+        private void CalculateBottomPoints()
+        {
+            double tempX = ((_leftSideLength * _leftSideLength + _baseLength * _baseLength - _rightSideLength * _rightSideLength) / (2 * _baseLength));
+            double tempY = Math.Sqrt(_leftSideLength * _leftSideLength - (tempX * tempX));
+
+            _bottomLeft = new Point((int)(_top.x - tempX), (int)(_top.y + tempY));
+            _bottomRight = new Point((int)(_top.x - tempX + _baseLength), (int)(_top.y + tempY));
         }
 
         public bool IsContainPoint(Point P)
@@ -160,9 +164,34 @@ namespace OOP_1__console_paint_.Canvas.Shapes
             return result;
         }
 
-        public string GetName()
+        public char BackgroundSymbol { get; set; }
+
+        public List<Point> GetPointsInside()
         {
-            return new string("Треугольник");
+
+            int minX = _bottomLeft.x;
+            int maxX = _bottomRight.x;
+            int minY = _top.y;
+            int maxY = _bottomLeft.y;
+
+            List<Point> borderPoints = GetAllSidesPoints();
+            HashSet<Point> borderSet = new HashSet<Point>(borderPoints);
+
+            List<Point> result = new List<Point>();
+            for (int y = minY; y <= maxY; y++)
+            {
+                for (int x = minX; x <= maxX; x++)
+                {
+                    Point p = new Point(x, y);
+
+                    if (!borderSet.Contains(p) && IsContainPoint(p))
+                    {
+                       result.Add(p);
+                    }
+                }
+            }
+
+            return result;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using OOP_1__console_paint_.Canvas;
+﻿using OOP_1__console_paint_.Canvas.Shapes;
 
 namespace OOP_1__console_paint_.Interfaces
 {
@@ -7,8 +7,9 @@ namespace OOP_1__console_paint_.Interfaces
         Point GetCenter();
         List<Point> GetVertexPoints();
         List<Point> GetAllSidesPoints();
+        List<Point> GetPointsInside();
         bool IsContainPoint(Point p);
         int[] GetParameters();
-        string GetName();
+        char BackgroundSymbol { get; set; }
     }
 }
