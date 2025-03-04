@@ -1,4 +1,5 @@
 ﻿
+using OOP_1__console_paint_.Canvas.Managers;
 using OOP_1__console_paint_.Canvas.Shapes;
 using OOP_1__console_paint_.Interfaces;
 

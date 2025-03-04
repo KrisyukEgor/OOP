@@ -1,5 +1,4 @@
-﻿
-namespace OOP_1__console_paint_.Canvas
+﻿namespace OOP_1__console_paint_.Canvas.Managers
 {
     public class CanvasTransformer
     {

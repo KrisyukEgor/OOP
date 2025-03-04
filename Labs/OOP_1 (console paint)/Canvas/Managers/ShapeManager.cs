@@ -1,9 +1,10 @@
-﻿using OOP_1__console_paint_.Interfaces;
+﻿using OOP_1__console_paint_.Canvas.Shapes;
+using OOP_1__console_paint_.Interfaces;
 using OOP_1__console_paint_.TerminalDir;
 using System.ComponentModel.Design;
 using System.Xml.XPath;
 
-namespace OOP_1__console_paint_.Canvas.Shapes
+namespace OOP_1__console_paint_.Canvas.Managers
 {
     public class ShapeManager
     {
@@ -20,8 +21,8 @@ namespace OOP_1__console_paint_.Canvas.Shapes
             }
             return instance;
         }
-        private ShapeManager() 
-        { 
+        private ShapeManager()
+        {
             painter = new CanvasPainter();
             validator = new CanvasValidator();
             allShapes = new List<IShape>();
@@ -55,10 +56,10 @@ namespace OOP_1__console_paint_.Canvas.Shapes
                 shape = new Circle(parameters[0], parameters[1], parameters[2]);
             }
             else if (parameters.Length == 4)
-            { 
+            {
                 shape = new Rectangle(parameters[0], parameters[1], parameters[2], parameters[3]);
             }
-            else if(parameters.Length == 5)
+            else if (parameters.Length == 5)
             {
                 shape = new Triangle(parameters[0], parameters[1], parameters[2], parameters[3], parameters[4]);
             }
@@ -89,11 +90,10 @@ namespace OOP_1__console_paint_.Canvas.Shapes
             if (shape == null) return;
 
             List<Point> points = shape.GetPointsInside().ToList();
-
             points.AddRange(shape.GetAllSidesPoints());
 
-            painter.ClearPoints(points);
             allShapes.Remove(shape);
+            painter.ClearPoints(points);
 
             RedrawShapesAfterAction(shape);
 
@@ -117,7 +117,7 @@ namespace OOP_1__console_paint_.Canvas.Shapes
             }
         }
 
-        private void DetectAndDrawShape(IShape shape)
+        public void DetectAndDrawShape(IShape shape)
         {
             if (shape is Circle circle)
             {
@@ -133,83 +133,74 @@ namespace OOP_1__console_paint_.Canvas.Shapes
             }
         }
 
-        public IShape MoveRight(IShape shape)
+        public void MoveRight(IShape shape)
         {
             int[] parameters = shape.GetParameters();
             parameters[0]++;
             char symbol = shape.BackgroundSymbol;
+
             IShape newShape = CreateShape(parameters, symbol);
 
             if (validator.CanDraw(newShape))
-            { 
-                Erase(shape);
-                DetectAndDrawShape(newShape);
-            }
-            else
             {
-                allShapes.Remove(newShape);
-                return shape;
+                Erase(shape);
+                shape.UpdateParameters(parameters);
+                DetectAndDrawShape(shape);
             }
-            return allShapes.Last();
+
+            allShapes.Remove(newShape);
         }
 
-        public IShape MoveLeft(IShape shape)
+        public void MoveLeft(IShape shape)
         {
             int[] parameters = shape.GetParameters();
             parameters[0]--;
             char symbol = shape.BackgroundSymbol;
+
             IShape newShape = CreateShape(parameters, symbol);
 
             if (validator.CanDraw(newShape))
             {
                 Erase(shape);
-                DetectAndDrawShape(newShape);
+                shape.UpdateParameters(parameters);
+                DetectAndDrawShape(shape);
             }
-            else {
-                allShapes.Remove(newShape);
-                return shape;
-            }
-            return allShapes.Last();
+            allShapes.Remove(newShape);
+
         }
 
-        public IShape MoveUp(IShape shape)
+        public void MoveUp(IShape shape)
         {
             int[] parameters = shape.GetParameters();
             parameters[1]--;
             char symbol = shape.BackgroundSymbol;
+
             IShape newShape = CreateShape(parameters, symbol);
 
             if (validator.CanDraw(newShape))
             {
                 Erase(shape);
-                DetectAndDrawShape(newShape);
+                shape.UpdateParameters(parameters);
+                DetectAndDrawShape(shape);
             }
-            else
-            {
-                allShapes.Remove(newShape);
-                return shape;
-            }
-            return allShapes.Last();
+            allShapes.Remove(newShape);
         }
 
-        public IShape MoveDown(IShape shape)
+        public void MoveDown(IShape shape)
         {
             int[] parameters = shape.GetParameters();
             parameters[1]++;
             char symbol = shape.BackgroundSymbol;
+
             IShape newShape = CreateShape(parameters, symbol);
 
             if (validator.CanDraw(newShape))
             {
                 Erase(shape);
-                DetectAndDrawShape(newShape);
+                shape.UpdateParameters(parameters);
+                DetectAndDrawShape(shape);
             }
-            else
-            {
-                allShapes.Remove(newShape);
-                return shape;
-            }
-            return allShapes.Last();
+            allShapes.Remove(newShape);
         }
     }
 }

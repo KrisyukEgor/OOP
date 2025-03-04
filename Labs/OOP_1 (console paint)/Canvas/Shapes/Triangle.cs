@@ -193,5 +193,21 @@ namespace OOP_1__console_paint_.Canvas.Shapes
 
             return result;
         }
+
+        public void UpdateParameters(int[] parameters)
+        {
+            _top.x = parameters[0];
+            _top.y = parameters[1];
+
+            _leftSideLength = parameters[2];
+            _baseLength = parameters[3];
+            _rightSideLength = parameters[4];
+
+            CalculateBottomPoints();
+            CalculateCenter();
+
+            _allPoints = null;
+
+        }
     }
 }

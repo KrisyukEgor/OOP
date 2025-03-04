@@ -16,7 +16,7 @@ namespace OOP_1__console_paint_.Canvas.Shapes
             _topLeft = new Point(xTop, yTop);
             this._width = width;
             this._height = height;
-            _center = CalculateCenter();
+            CalculateCenter();
             BackgroundSymbol = ' ';
         }
 
@@ -31,12 +31,12 @@ namespace OOP_1__console_paint_.Canvas.Shapes
             return pointsList;
         }
 
-        private Point CalculateCenter()
+        private void CalculateCenter()
         {
             int xCenter = _topLeft.x + (int)(_width / 2);
             int yCenter = _topLeft.y + (int)(_height / 2);
-            Point center = new Point(xCenter, yCenter);
-            return center;
+            _center = new Point(xCenter, yCenter);
+       
         }
 
         public Point GetCenter()
@@ -132,6 +132,16 @@ namespace OOP_1__console_paint_.Canvas.Shapes
             }
 
             return result;
+        }
+
+        public void UpdateParameters(int[] paramaters)
+        {
+            _topLeft.x = paramaters[0];
+            _topLeft.y = paramaters[1];
+            _width = paramaters[2];
+            _height = paramaters[3];
+            CalculateCenter();
+            _allPoints = null;
         }
     }
 }

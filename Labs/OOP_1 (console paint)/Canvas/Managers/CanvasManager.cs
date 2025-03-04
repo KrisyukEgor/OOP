@@ -1,10 +1,8 @@
-﻿
-using OOP_1__console_paint_.Canvas.Shapes;
-using OOP_1__console_paint_.Comands;
+﻿using OOP_1__console_paint_.Canvas.Shapes;
 using OOP_1__console_paint_.Interfaces;
 using OOP_1__console_paint_.TerminalDir;
 
-namespace OOP_1__console_paint_.Canvas
+namespace OOP_1__console_paint_.Canvas.Managers
 {
     public class CanvasManager
     {
@@ -28,7 +26,7 @@ namespace OOP_1__console_paint_.Canvas
 
         private CanvasManager()
         {
-             DrawCanvas();
+            DrawCanvas();
             shapeManager = ShapeManager.getInstance();
             painter = new CanvasPainter();
             validator = new CanvasValidator();
@@ -82,76 +80,77 @@ namespace OOP_1__console_paint_.Canvas
             Console.Write("#");
         }
 
-        public bool DrawCircle(int xTop, int yTop, int radius)
+        public IShape? DrawCircle(int xTop, int yTop, int radius)
         {
             Circle circle = shapeManager.CreateCircleShape(xTop, yTop, radius);
-            if(!validator.CanDraw(circle))
+            if (!validator.CanDraw(circle))
             {
-                return false;
+                return null;
             }
 
             painter.DrawCircle(circle);
 
-            return true;
+            return circle;
         }
 
-        public bool DrawRectangle(int xTop, int yTop, int width, int height)
+        public IShape? DrawRectangle(int xTop, int yTop, int width, int height)
         {
             Rectangle rectangle = shapeManager.CreateRectangle(xTop, yTop, width, height);
 
             if (!validator.CanDraw(rectangle))
             {
-                
-                return false;
+
+                return null;
             }
 
             painter.DrawRectangle(rectangle);
 
-            return true;
+            return rectangle;
         }
 
-        public bool DrawTriangle(int xTop, int yTop, int leftSide, int bottomSide, int rightSide)
+        public IShape? DrawTriangle(int xTop, int yTop, int leftSide, int bottomSide, int rightSide)
         {
-            if (!Triangle.IsExist(xTop, yTop, leftSide, bottomSide, rightSide)) { return false; }
+            if (!Triangle.IsExist(xTop, yTop, leftSide, bottomSide, rightSide)) { return null; }
 
             Triangle triangle = shapeManager.CreateTriangeShape(xTop, yTop, leftSide, bottomSide, rightSide);
 
             if (!validator.CanDraw(triangle))
             {
-                return false;
+                return null;
             }
 
             painter.DrawTriangle(triangle);
 
-            return true;
+            return triangle;
         }
 
+
+        public void DetectAndDrawShape(IShape shape)
+        {
+            shapeManager.DetectAndDrawShape(shape);
+        }
         public void Erase(IShape shape)
         {
             shapeManager.Erase(shape);
         }
 
-        public IShape MoveRight(IShape shape)
+        public void MoveRight(IShape shape)
         {
-            IShape newShape = shapeManager.MoveRight(shape);
-            return newShape;
+            shapeManager.MoveRight(shape);
         }
 
-        public IShape MoveLeft(IShape shape)
+        public void MoveLeft(IShape shape)
         {
-            IShape newShape = shapeManager.MoveLeft(shape);
-            return newShape;
+            shapeManager.MoveLeft(shape);
         }
 
-        public IShape MoveUp(IShape shape)
+        public void MoveUp(IShape shape)
         {
-            IShape newShape = shapeManager.MoveUp(shape);
-            return newShape;
+            shapeManager.MoveUp(shape);
         }
-        public IShape MoveDown(IShape shape)
+        public void MoveDown(IShape shape)
         {
-            IShape newShape = shapeManager.MoveDown(shape);
-            return newShape;
+           shapeManager.MoveDown(shape);
         }
 
         public void SetShapeBackground(IShape shape, char symbol)

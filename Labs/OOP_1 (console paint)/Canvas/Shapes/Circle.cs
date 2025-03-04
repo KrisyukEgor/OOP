@@ -114,5 +114,13 @@ namespace OOP_1__console_paint_.Canvas.Shapes
 
             return result;
         }
+
+        public void UpdateParameters(int[] parameters)
+        {
+            _center.x = parameters[0];
+            _center.y = parameters[1];
+            _radius = parameters[2];
+            _allPoints = null;
+        }
     }
 }

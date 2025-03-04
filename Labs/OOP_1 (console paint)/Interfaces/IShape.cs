@@ -10,6 +10,7 @@ namespace OOP_1__console_paint_.Interfaces
         List<Point> GetPointsInside();
         bool IsContainPoint(Point p);
         int[] GetParameters();
+        void UpdateParameters(int[] parameters);
         char BackgroundSymbol { get; set; }
     }
 }

@@ -1,9 +1,8 @@
-﻿
-using OOP_1__console_paint_.Canvas.Shapes;
+﻿using OOP_1__console_paint_.Canvas.Shapes;
 using OOP_1__console_paint_.Interfaces;
 using OOP_1__console_paint_.TerminalDir;
 
-namespace OOP_1__console_paint_.Canvas
+namespace OOP_1__console_paint_.Canvas.Managers
 {
     public class UserInputHandler
     {
@@ -17,6 +16,7 @@ namespace OOP_1__console_paint_.Canvas
         {
             _width = CanvasManager.Width;
             _height = CanvasManager.Height;
+
             terminal = Terminal.getInstance();
             transformer = new CanvasTransformer();
             shapeManager = ShapeManager.getInstance();
@@ -118,6 +118,7 @@ namespace OOP_1__console_paint_.Canvas
 
             return choosedShape;
         }
+
     }
 
 }
