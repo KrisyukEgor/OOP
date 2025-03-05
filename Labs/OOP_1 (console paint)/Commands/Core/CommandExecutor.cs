@@ -3,9 +3,10 @@ using OOP_1__console_paint_.Canvas.Shapes;
 using OOP_1__console_paint_.Commands.Drawing;
 using OOP_1__console_paint_.Commands.Movement;
 using OOP_1__console_paint_.Commands.Painting;
+using OOP_1__console_paint_.File;
 using OOP_1__console_paint_.Interfaces;
 using OOP_1__console_paint_.TerminalDir;
-using System.Runtime.InteropServices;
+
 
 namespace OOP_1__console_paint_.Commands.Core
 {
@@ -17,6 +18,8 @@ namespace OOP_1__console_paint_.Commands.Core
         UserInputHandler userInputHandler;
         CommandHistory history;
         CommandDispatcher dispatcher;
+        CanvasManager canvasManager;
+        FileService fileService;
         public CommandExecutor()
         {
 
@@ -25,6 +28,8 @@ namespace OOP_1__console_paint_.Commands.Core
             userInputHandler = new UserInputHandler();
             history = new CommandHistory();
             dispatcher = new CommandDispatcher();
+            canvasManager = CanvasManager.getInstance();
+            fileService = new FileService();
             RegistrateCommands();
         }
 
@@ -37,12 +42,15 @@ namespace OOP_1__console_paint_.Commands.Core
 
             dispatcher.RegisterCommand("/erase", args => Erase());
             dispatcher.RegisterCommand("/move", args => Move());
-            dispatcher.RegisterCommand("/setbgcolor", args => { SetBgColor(); return null; });
+            dispatcher.RegisterCommand("/setbgcolor", args => SetBgColor());
 
             dispatcher.RegisterCommand("/help", args => WriteHelp());
             dispatcher.RegisterCommand("/exit", args => { Exit(); return null; });
             dispatcher.RegisterCommand("/undo", args => Undo());
             dispatcher.RegisterCommand("/redo", args => Redo());
+
+            dispatcher.RegisterStringCommand("/save", args => Save(args[0]));
+            dispatcher.RegisterStringCommand("/load", args => Load(args[0]));
         }
 
         public ICommand DrawCircle(int x, int y, int r)
@@ -139,7 +147,7 @@ namespace OOP_1__console_paint_.Commands.Core
 
         }
 
-        public void SetBgColor()
+        public ICommand SetBgColor()
         {
             IShape? shape = null;
             while (shape == null)
@@ -148,7 +156,7 @@ namespace OOP_1__console_paint_.Commands.Core
 
                 if (point.x == -1 && point.y == -1)
                 {
-                    return;
+                    return new NoParamCommand();
                 }
                 shape = userInputHandler.ChooseShape(point);
             }
@@ -156,7 +164,7 @@ namespace OOP_1__console_paint_.Commands.Core
             terminal.WriteLine("Введите символ");
             char symbol = terminal.ReadLine()[0];
 
-            //canvas.SetShapeBackground(shape, symbol);
+            return new SetBgColorCommand(shape, symbol);
         }
 
         public ICommand WriteHelp()
@@ -210,6 +218,36 @@ namespace OOP_1__console_paint_.Commands.Core
             }
         }
 
+        public void ExecuteCommand(string cmd, string[]? args)
+        {
+            var (command, errorMessage) = dispatcher.GetCommand(cmd, args ?? Array.Empty<string>());
+
+            if (errorMessage != null)
+            {
+                terminal.WriteLine(errorMessage);
+                return;
+            }
+
+            if (command == null)
+            {
+                terminal.WriteLine("Ошибка: команда не была создана.");
+                return;
+            }
+
+            try
+            {
+                command.Execute();
+                if (command is not NoParamCommand)
+                {
+                    history.AddToHistory(command);
+                }
+            }
+            catch (Exception ex)
+            {
+                terminal.WriteLine($"Ошибка при выполнении команды: {ex.Message}");
+            }
+        }
+
         public ICommand Undo()
         {
             history.Undo();
@@ -221,5 +259,24 @@ namespace OOP_1__console_paint_.Commands.Core
             history.Redo();
             return new NoParamCommand();
         }
-    }
+
+        public ICommand Save(string path)
+        {
+
+            var allShapes = canvasManager.GetAllShapes();
+            fileService.Save(path, allShapes);
+            return new NoParamCommand();
+        }
+
+        public ICommand Load(string path)
+        {
+            var allShapes = fileService.Load(path);
+
+            foreach(var shape in allShapes )
+            {
+                canvasManager.DetectAndDrawShape(shape);
+            }
+            return new NoParamCommand();
+        }
+     }
 }

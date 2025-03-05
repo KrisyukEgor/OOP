@@ -122,5 +122,11 @@ namespace OOP_1__console_paint_.Canvas.Shapes
             _radius = parameters[2];
             _allPoints = null;
         }
+
+        public override string ToString()
+        {
+            return $"Circle: {_center.x}, {_center.y}, {_radius}, {BackgroundSymbol};";
+        }
+
     }
 }

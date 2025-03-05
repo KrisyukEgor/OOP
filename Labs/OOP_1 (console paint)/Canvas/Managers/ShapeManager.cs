@@ -202,5 +202,10 @@ namespace OOP_1__console_paint_.Canvas.Managers
             }
             allShapes.Remove(newShape);
         }
+
+        public List<IShape> GetAllShapes()
+        {
+            return new List<IShape>(allShapes);
+        }
     }
 }

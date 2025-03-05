@@ -143,5 +143,11 @@ namespace OOP_1__console_paint_.Canvas.Shapes
             CalculateCenter();
             _allPoints = null;
         }
+
+        public override string ToString()
+        {
+            return $"Rectangle: {_topLeft.x}, {_topLeft.y}, {_width}, {_height}, {BackgroundSymbol};";
+        }
+
     }
 }

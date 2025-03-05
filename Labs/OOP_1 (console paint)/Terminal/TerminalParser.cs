@@ -2,13 +2,21 @@
 {
     public class TerminalParser
     {
-        public static (string?, int[]?) ParseCommand(string? inputCommand)
+        public static ParsedCommand ParseCommand(string? inputCommand)
         {
 
             string? command = DetectComand(ref inputCommand);
-            int[]? args = GetArgs(inputCommand);
+            int[]? args = GetIntArgs(inputCommand);
+            string[]? strArgs = GetStringCommand(inputCommand);
 
-            return (command, args);
+            ParsedCommand parsedCommand = new ParsedCommand();
+
+            parsedCommand.Command = command;
+            parsedCommand.IntArgs = args;
+            parsedCommand.StrArgs = strArgs;
+
+            return parsedCommand;
+            
         }
 
         private static string? DetectComand(ref string input)
@@ -41,7 +49,7 @@
 
             return result;
         }
-        private static int[]? GetArgs(string input)
+        private static int[]? GetIntArgs(string input)
         {
             int[]? args = null;
             int semicolonIndex = input.IndexOf(";");
@@ -79,5 +87,33 @@
 
             return args;
         }
+
+        private static string[]? GetStringCommand(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                return null;
+            }
+
+            List<string> args = new List<string>();
+            int startIndex = 0;
+
+            while ((startIndex = input.IndexOf('"', startIndex)) != -1)
+            {
+                int endIndex = input.IndexOf('"', startIndex + 1);
+                if (endIndex == -1)
+                {
+                    break; 
+                }
+
+                string arg = input.Substring(startIndex + 1, endIndex - startIndex - 1);
+                args.Add(arg);
+
+                startIndex = endIndex + 1; 
+            }
+
+            return args.Count > 0 ? args.ToArray() : null;
+        }
+
     }
 }

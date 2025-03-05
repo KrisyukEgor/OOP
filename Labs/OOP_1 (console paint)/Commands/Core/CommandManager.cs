@@ -1,21 +1,20 @@
-﻿using OOP_1__console_paint_.Canvas.Managers;
-using OOP_1__console_paint_.Interfaces;
+﻿
 using OOP_1__console_paint_.TerminalDir;
-using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace OOP_1__console_paint_.Commands.Core
 {
     public class CommandManager
     {
-        CommandExecutor executor;
+        private readonly CommandExecutor executor;
+        private readonly Terminal terminal;
 
-        Terminal terminal;
         public CommandManager()
         {
             terminal = Terminal.getInstance();
             executor = new CommandExecutor();
-
         }
+
         public void Start()
         {
             terminal.WriteLine("Введите операцию (все команды начинаются с /)");
@@ -24,26 +23,39 @@ namespace OOP_1__console_paint_.Commands.Core
             while (true)
             {
                 input = terminal.ReadLine()?.Trim().ToLower();
-
-                var (command, args) = TerminalParser.ParseCommand(input);
-
-                if (command != null)
+                if (string.IsNullOrWhiteSpace(input))
                 {
-                    if (args != null && args.Contains(-1))
+                    terminal.WriteLine("Команда не может быть пустой.");
+                    continue;
+                }
+
+                var parsedCommand = TerminalParser.ParseCommand(input);
+
+                if (parsedCommand.Command != null)
+                {
+                    if (parsedCommand.IntArgs != null && parsedCommand.IntArgs.Contains(-1))
                     {
-                        terminal.WriteLine("Введите натуральные значения");
+                        terminal.WriteLine("Введите натуральные значения.");
                     }
                     else
                     {
-                        executor.ExecuteCommand(command, args);
+                        if(parsedCommand.StrArgs != null)
+                        {
+                            executor.ExecuteCommand(parsedCommand.Command, parsedCommand.StrArgs);
+                        }
+                        else
+                        {
+                            executor.ExecuteCommand(parsedCommand.Command, parsedCommand.IntArgs);
+                        }
+                        
                     }
                 }
                 else
                 {
-                    terminal.WriteLine("Неверная команда");
+                    terminal.WriteLine("Неверная команда.");
                 }
             }
         }
-
     }
+
 }

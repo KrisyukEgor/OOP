@@ -124,6 +124,11 @@ namespace OOP_1__console_paint_.Canvas.Managers
             return triangle;
         }
 
+        public IShape CreateShape(int[] parameters, char symbol)
+        {
+            IShape shape = shapeManager.CreateShape(parameters, symbol);
+            return shape;
+        }
 
         public void DetectAndDrawShape(IShape shape)
         {
@@ -156,6 +161,11 @@ namespace OOP_1__console_paint_.Canvas.Managers
         public void SetShapeBackground(IShape shape, char symbol)
         {
             painter.SetShapeBackground(shape, symbol);
+        }
+
+        public List<IShape> GetAllShapes()
+        {
+            return shapeManager.GetAllShapes();
         }
 
     }

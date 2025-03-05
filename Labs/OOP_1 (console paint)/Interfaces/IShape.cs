@@ -12,5 +12,7 @@ namespace OOP_1__console_paint_.Interfaces
         int[] GetParameters();
         void UpdateParameters(int[] parameters);
         char BackgroundSymbol { get; set; }
+
+        string ToString();
     }
 }

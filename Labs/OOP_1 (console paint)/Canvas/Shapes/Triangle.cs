@@ -209,5 +209,11 @@ namespace OOP_1__console_paint_.Canvas.Shapes
             _allPoints = null;
 
         }
+
+        public override string ToString()
+        {
+            return $"Triangle: {_top.x}, {_top.y}, {_leftSideLength}, {_baseLength}, {_rightSideLength}, {BackgroundSymbol};";
+        }
+
     }
 }
