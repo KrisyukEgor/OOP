@@ -32,7 +32,7 @@ namespace OOP_1__console_paint_.Commands.Core
                 }
             }
 
-            return (null, $"Команда {name} не найдена.");
+            return (null, $"Команда {name} не найдена, проверьте название или параметры");
         }
 
         public (ICommand?, string?) GetCommand(string name, string[] args)
@@ -49,7 +49,7 @@ namespace OOP_1__console_paint_.Commands.Core
                 }
             }
 
-            return (null, $"Команда {name} не найдена.");
+            return (null, $"Команда {name} не найдена, проверьте название или параметры");
         }
     }
 

@@ -212,7 +212,7 @@ namespace OOP_1__console_paint_.Canvas.Shapes
 
         public override string ToString()
         {
-            return $"Triangle: {_top.x}, {_top.y}, {_leftSideLength}, {_baseLength}, {_rightSideLength}, {BackgroundSymbol};";
+            return $"Triangle: {_top.x}, {_top.y}, {_leftSideLength}, {_baseLength}, {_rightSideLength}, bgColor: {BackgroundSymbol};";
         }
 
     }

@@ -48,6 +48,7 @@ namespace OOP_1__console_paint_.Commands.Core
             dispatcher.RegisterCommand("/exit", args => { Exit(); return null; });
             dispatcher.RegisterCommand("/undo", args => Undo());
             dispatcher.RegisterCommand("/redo", args => Redo());
+            dispatcher.RegisterCommand("/cls", args => ClearTerminal());
 
             dispatcher.RegisterStringCommand("/save", args => Save(args[0]));
             dispatcher.RegisterStringCommand("/load", args => Load(args[0]));
@@ -159,6 +160,7 @@ namespace OOP_1__console_paint_.Commands.Core
                     return new NoParamCommand();
                 }
                 shape = userInputHandler.ChooseShape(point);
+                
             }
 
             terminal.WriteLine("Введите символ");
@@ -167,21 +169,6 @@ namespace OOP_1__console_paint_.Commands.Core
             return new SetBgColorCommand(shape, symbol);
         }
 
-        public ICommand WriteHelp()
-        {
-            terminal.WriteLine("\n===================================\n Команды \n");
-            terminal.WriteLine("/drawSquare");
-            terminal.WriteLine("/drawTriangle");
-            terminal.WriteLine("/drawRect");
-            terminal.WriteLine("/drawCircle");
-
-            terminal.WriteLine("\n/cls: Очищает командную строку");
-            terminal.WriteLine("/exit: Выход");
-
-            terminal.WriteLine("\n===================================");
-
-            return new NoParamCommand();
-        }
         public void Exit()
         {
             terminal.WriteLine("Выход из программы...");
@@ -200,7 +187,7 @@ namespace OOP_1__console_paint_.Commands.Core
 
             if (command == null)
             {
-                terminal.WriteLine("Ошибка: команда не была создана.");
+
                 return;
             }
 
@@ -211,6 +198,7 @@ namespace OOP_1__console_paint_.Commands.Core
                 {
                     history.AddToHistory(command);
                 }
+                
             }
             catch (Exception ex)
             {
@@ -230,7 +218,6 @@ namespace OOP_1__console_paint_.Commands.Core
 
             if (command == null)
             {
-                terminal.WriteLine("Ошибка: команда не была создана.");
                 return;
             }
 
@@ -241,6 +228,7 @@ namespace OOP_1__console_paint_.Commands.Core
                 {
                     history.AddToHistory(command);
                 }
+                
             }
             catch (Exception ex)
             {
@@ -257,6 +245,11 @@ namespace OOP_1__console_paint_.Commands.Core
         public ICommand Redo()
         {
             history.Redo();
+            return new NoParamCommand();
+        }
+        public ICommand ClearTerminal()
+        {
+            terminal.Clear();
             return new NoParamCommand();
         }
 
@@ -278,5 +271,46 @@ namespace OOP_1__console_paint_.Commands.Core
             }
             return new NoParamCommand();
         }
-     }
+
+        public ICommand WriteHelp()
+        {
+            terminal.WriteLine("\n===================================\n");
+            terminal.WriteLine("Команды с параметрами\n");
+            terminal.WriteLine("/drawSquare *параметры* : создание квадрата (необходимы точка верхней левой вершины и длина стороны)");
+            terminal.WriteLine("/drawTriangle *параметры* : создание треугольника (необходимы точка верхней вершины и длины трёх сторон)");
+            terminal.WriteLine("/drawRect *параметры* : создание прямоугольника (необходимы точка верхней левой вершины, длина и ширина)");
+            terminal.WriteLine("/drawCircle *параметры* : создание круга (необходимы точка центра и радиус)");
+            terminal.WriteLine();
+            terminal.WriteLine("\t\tПримеры \n");
+            terminal.WriteLine("/drawSquare 10, 10; 3");
+            terminal.WriteLine("/drawTriangle 10, 10; 3, 4, 5");
+            terminal.WriteLine();
+            terminal.WriteLine("\n===================================\n");
+            terminal.WriteLine("Команды, управляемые стрелочками\n");
+            terminal.WriteLine("/erase : удаление фигуры");
+            terminal.WriteLine("/move : перемещение фигуры");
+            terminal.WriteLine("/setBgColor : изменение фона фигуры");
+            terminal.WriteLine();
+            terminal.WriteLine("Для выхода из команды нажмите ESC");
+
+            terminal.WriteLine("\n===================================\n");
+            terminal.WriteLine("Команды работы с файлами\n");
+            terminal.WriteLine("/save *путь до файла.txt в \"\"*: сохранение фигур в файл");
+            terminal.WriteLine("/load *путь до файла.txt в \"\"*: загрузка фигур из файла");
+            terminal.WriteLine();
+            terminal.WriteLine("\t\tПримеры \n");
+            terminal.WriteLine("/save \"example.txt\"");
+            terminal.WriteLine("/load \"example.txt\"");
+
+            terminal.WriteLine("\n===================================\n");
+            terminal.WriteLine("Команды без параметров\n");
+            terminal.WriteLine("/undo : отмена последнего действия");
+            terminal.WriteLine("/redo : отмена undo действия");
+            terminal.WriteLine("/cls : очистка терминала");
+            terminal.WriteLine("/exit : выход из программы");
+            terminal.WriteLine("\n===================================");
+
+            return new NoParamCommand();
+        }
+    }
 }

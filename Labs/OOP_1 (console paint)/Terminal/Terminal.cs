@@ -1,9 +1,11 @@
-﻿namespace OOP_1__console_paint_.TerminalDir
+﻿using OOP_1__console_paint_.Canvas.Managers;
+
+namespace OOP_1__console_paint_.TerminalDir
 {
     public class Terminal
     {
         private static Terminal? instance = null;
-        int cursorY = 25;
+        int cursorY = CanvasManager.Height + 1;
         int cursorX = 0;
         public static Terminal getInstance()
         {
@@ -52,6 +54,20 @@
             cursorY++;
             cursorX = 0;
             return Console.ReadLine();
+        }
+
+        public void Clear()
+        {
+            int yStart = 26;
+            int width = CanvasManager.Width;
+            for(int i = yStart; i <= cursorY; i++)
+            {
+                Console.SetCursorPosition(0, i);
+                Console.Write(new string(' ', width));
+            }
+            cursorX = 0;
+            cursorY = CanvasManager.Height + 2;
+            Console.SetCursorPosition(cursorX, cursorY);
         }
     }
 }

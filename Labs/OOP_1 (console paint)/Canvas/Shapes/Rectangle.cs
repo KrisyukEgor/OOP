@@ -146,7 +146,7 @@ namespace OOP_1__console_paint_.Canvas.Shapes
 
         public override string ToString()
         {
-            return $"Rectangle: {_topLeft.x}, {_topLeft.y}, {_width}, {_height}, {BackgroundSymbol};";
+            return $"Rectangle: {_topLeft.x}, {_topLeft.y}, {_width}, {_height}, bgColor:{BackgroundSymbol};";
         }
 
     }

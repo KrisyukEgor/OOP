@@ -1,8 +1,6 @@
 ﻿using OOP_1__console_paint_.Canvas.Shapes;
 using OOP_1__console_paint_.Interfaces;
 using OOP_1__console_paint_.TerminalDir;
-using System.ComponentModel.Design;
-using System.Xml.XPath;
 
 namespace OOP_1__console_paint_.Canvas.Managers
 {
@@ -101,12 +99,13 @@ namespace OOP_1__console_paint_.Canvas.Managers
 
         private void RedrawShapesAfterAction(IShape shape)
         {
-            List<Point> shapesSidesPoints = shape.GetAllSidesPoints();
+            List<Point> shapePoints = shape.GetAllSidesPoints();
+            shapePoints.AddRange(shape.GetPointsInside());
             HashSet<IShape> shapesToRedraw = new HashSet<IShape>();
 
             foreach (IShape candidateShape in allShapes)
             {
-                if (candidateShape != shape && shapesSidesPoints.Any(p => candidateShape.IsContainPoint(p)))
+                if (candidateShape != shape && shapePoints.Any(p => candidateShape.IsContainPoint(p)))
                 {
                     shapesToRedraw.Add(candidateShape);
                 }
@@ -145,7 +144,9 @@ namespace OOP_1__console_paint_.Canvas.Managers
             {
                 Erase(shape);
                 shape.UpdateParameters(parameters);
+
                 DetectAndDrawShape(shape);
+                allShapes.Add(shape);
             }
 
             allShapes.Remove(newShape);
@@ -163,7 +164,9 @@ namespace OOP_1__console_paint_.Canvas.Managers
             {
                 Erase(shape);
                 shape.UpdateParameters(parameters);
+
                 DetectAndDrawShape(shape);
+                allShapes.Add(shape);
             }
             allShapes.Remove(newShape);
 
@@ -181,7 +184,9 @@ namespace OOP_1__console_paint_.Canvas.Managers
             {
                 Erase(shape);
                 shape.UpdateParameters(parameters);
+
                 DetectAndDrawShape(shape);
+                allShapes.Add(shape);
             }
             allShapes.Remove(newShape);
         }
@@ -198,7 +203,9 @@ namespace OOP_1__console_paint_.Canvas.Managers
             {
                 Erase(shape);
                 shape.UpdateParameters(parameters);
+
                 DetectAndDrawShape(shape);
+                allShapes.Add(shape);
             }
             allShapes.Remove(newShape);
         }

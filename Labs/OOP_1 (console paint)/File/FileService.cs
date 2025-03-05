@@ -46,31 +46,36 @@ namespace OOP_1__console_paint_.File
                     if (string.IsNullOrEmpty(line))
                         continue;
 
-                    string[] parts = line.Split(':', StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = line.Split(new char[] { ':' }, 2, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length != 2)
                         continue;
 
                     string shapeType = parts[0].Trim();
-                    string[] tokens = parts[1].Split(new char[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
+                    string rest = parts[1].Trim();
 
-                    if (tokens.Length < 2)
+                    int bgIndex = rest.IndexOf("bgColor:");
+                    if (bgIndex == -1)
+                        continue; 
+
+                    string numericPart = rest.Substring(0, bgIndex).Trim().TrimEnd(',');
+
+                    string bgPart = rest.Substring(bgIndex + "bgColor:".Length).Trim();
+                    if (bgPart.EndsWith(";"))
+                        bgPart = bgPart.Substring(0, bgPart.Length - 1).Trim();
+
+                    string[] numTokens = numericPart.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (numTokens.Length == 0)
                         continue;
 
-                    string symbolToken = tokens[tokens.Length - 1].Trim();
-                    if (string.IsNullOrEmpty(symbolToken))
-                    {
-                        symbolToken = " ";
-                    }
-
-                    int[] parameters = tokens
-                        .Take(tokens.Length - 1)
+                    int[] parameters = numTokens
                         .Select(p => int.TryParse(p.Trim(), out int value) ? value : -1)
                         .ToArray();
 
                     if (parameters.Contains(-1))
                         continue;
+                    char bgColor = string.IsNullOrEmpty(bgPart) ? ' ' : bgPart[0];
 
-                    IShape shape = canvasManager.CreateShape(parameters, symbolToken[0]);
+                    IShape shape = canvasManager.CreateShape(parameters, bgColor);
                     shapes.Add(shape);
                 }
             }
@@ -78,6 +83,7 @@ namespace OOP_1__console_paint_.File
             terminal.WriteLine("Фигуры успешно загружены");
             return shapes;
         }
+
 
 
     }

@@ -14,9 +14,7 @@ namespace OOP_1__console_paint_
         }
         public void Start()
         {
-            //canvas.DrawRectangle(26, 8, 15, 15);
-            //canvas.DrawRectangle(33, 3, 10, 10);
-            //canvas.DrawRectangle(30, 10, 6, 6);
+
             comandManager.Start();
 
         }

@@ -1,6 +1,7 @@
 ﻿using OOP_1__console_paint_.Canvas.Shapes;
 using OOP_1__console_paint_.Interfaces;
 using OOP_1__console_paint_.TerminalDir;
+using System.Xml.XPath;
 
 namespace OOP_1__console_paint_.Canvas.Managers
 {
@@ -160,7 +161,9 @@ namespace OOP_1__console_paint_.Canvas.Managers
 
         public void SetShapeBackground(IShape shape, char symbol)
         {
-            painter.SetShapeBackground(shape, symbol);
+            Erase(shape);
+            IShape newShape = shapeManager.CreateShape(shape.GetParameters(), symbol);
+            shapeManager.DetectAndDrawShape(newShape);
         }
 
         public List<IShape> GetAllShapes()

@@ -125,7 +125,7 @@ namespace OOP_1__console_paint_.Canvas.Shapes
 
         public override string ToString()
         {
-            return $"Circle: {_center.x}, {_center.y}, {_radius}, {BackgroundSymbol};";
+            return $"Circle: {_center.x}, {_center.y}, {_radius}, bgColor: {BackgroundSymbol};";
         }
 
     }

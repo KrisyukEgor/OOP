@@ -73,17 +73,7 @@ namespace OOP_1__console_paint_.Canvas.Managers
             for (int i = 0; i < shapeList?.Count; i++)
             {
                 IShape shape = shapeList[i];
-                terminal.Write($"{i + 1}. Фигура с центром в точке ({shape.GetCenter().x}, {shape.GetCenter().y}) и сторонами (радиусом): ");
-
-                int[] parameters = shape.GetParameters();
-                for (int j = 2; j < parameters.Length; j++)
-                {
-                    terminal.Write($"{parameters[j]}");
-                    if (j != parameters.Length - 1)
-                    {
-                        terminal.Write(", ");
-                    }
-                }
+                terminal.Write($"{i + 1}. {shape.ToString()} ");
                 terminal.WriteLine();
             }
             string? inputNumber;
