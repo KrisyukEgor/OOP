@@ -1,0 +1,18 @@
+﻿using OOP_1__console_paint_.Canvas.Shapes;
+
+namespace OOP_1__console_paint_.Interfaces
+{
+    public interface IShape
+    {
+        Point GetCenter();
+        List<Point> GetVertexPoints();
+        List<Point> GetAllSidesPoints();
+        List<Point> GetPointsInside();
+        bool IsContainPoint(Point p);
+        int[] GetParameters();
+        void UpdateParameters(int[] parameters);
+        char BackgroundSymbol { get; set; }
+
+        string ToString();
+    }
+}
