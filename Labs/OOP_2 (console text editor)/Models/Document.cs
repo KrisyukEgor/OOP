@@ -22,7 +22,7 @@ public class Document
         return _linesList[index];
     }
 
-    public void InsertLine(int index, string line = "")
+    public void InsertLine(int index, string line)
     {
         ValidateLineIndex(index, maxInclude: true);
         _linesList.Insert(index, line);
