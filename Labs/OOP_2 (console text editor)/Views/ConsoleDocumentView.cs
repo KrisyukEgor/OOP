@@ -8,17 +8,33 @@ namespace OOP_2__console_text_editor_.Views
     {
         private Document? _document;
         private int _firstLineIndex = 0;
+        private int cursorX = 0;
+        private int cursorY = 0;
+        
         private WindowSizeController _windowSizeController;
 
         public ConsoleDocumentView(WindowSizeController windowSizeController)
         {
             _windowSizeController = windowSizeController;
+
         }
 
         public Document Document
         {
             get => _document;
             set => _document = value;
+        }
+
+        public void SetCursorPosition(int cursorX, int cursorY)
+        {
+            this.cursorX = cursorX;
+            this.cursorY = cursorY;
+            Console.SetCursorPosition(cursorX, cursorY);
+        }
+
+        private void SetCursorPosition()
+        {
+            Console.SetCursorPosition(cursorX, cursorY);
         }
         public void Render(int firstLineIndex)
         {
@@ -57,7 +73,10 @@ namespace OOP_2__console_text_editor_.Views
 
         private void PrintLine(string line)
         {
-            Console.WriteLine(line); //возможно потом изменю
+            Console.CursorVisible = true;
+            
+            Console.Write(line); //возможно потом изменю
+            SetCursorPosition();
         }
     }
 }

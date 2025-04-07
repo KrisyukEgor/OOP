@@ -2,7 +2,7 @@ using OOP_2__console_text_editor_.Controllers;
 using OOP_2__console_text_editor_.Interfaces;
 using OOP_2__console_text_editor_.Models;
 
-namespace OOP_2__console_text_editor_.Commands;
+namespace OOP_2__console_text_editor_.Commands.Text;
 
 public class PrintCharCommand : ICommand
 {
@@ -23,6 +23,6 @@ public class PrintCharCommand : ICommand
 
     public void UnExecute()
     {
-        
+        controller.RemoveChar();
     }
 }

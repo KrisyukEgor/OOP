@@ -1,4 +1,5 @@
 
+using OOP_2__console_text_editor_.Commands.HotKeys;
 using OOP_2__console_text_editor_.Interfaces;
 using OOP_2__console_text_editor_.Models;
 using OOP_2__console_text_editor_.Services;
@@ -34,13 +35,24 @@ public class InputController
             _inputHandler.StopListening();
             _inputHandler.KeyPressed -= ControlInputKey;
         }
+        
         try
         { 
             ICommand? command = _dictionary.GetCommand(keyInfo);
-            if (command != null)
+            
+            if (command is UndoCommand)
+            {
+                command.Execute();
+            }
+            else if (command is RedoCommand)
+            {
+                command.Execute();
+            }
+            else
             {
                 _commandProcessor.ExecuteCommand(command);
             }
+
             
         }
         catch (ArgumentOutOfRangeException ex)

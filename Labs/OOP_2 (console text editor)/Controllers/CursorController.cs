@@ -10,6 +10,8 @@ public class CursorController
     public CursorController()
     {
         cursor = new Cursor();
+        cursor.X = 0;
+        cursor.Y = 0;
     }
 
     public int GetY()
@@ -88,6 +90,7 @@ public class CursorController
         if (document == null) return;
 
         int lineLength = document.Lines[cursor.Y].Length;
+        
         if (cursor.X < lineLength)
         {
             cursor.X++;
@@ -117,12 +120,21 @@ public class CursorController
 
     private void UpdatePosition()
     {
-        if (document == null) return;
+        if (document == null)
+            return;
+
+        if (document.Lines.Count == 0)
+        {
+            cursor.Y = 0;
+            cursor.X = 0;
+            return;
+        }
 
         cursor.Y = Math.Clamp(cursor.Y, 0, document.Lines.Count - 1);
 
-        int maxX = document.Lines[cursor.Y].Length;
-        cursor.X = Math.Clamp(cursor.X, 0, maxX);
+        string currentLine = document.Lines[cursor.Y];
+    
+        cursor.X = Math.Clamp(cursor.X, 0, currentLine.Length);
     }
     
 

@@ -29,7 +29,8 @@ public class AppController
 
         documentViewer = new ConsoleDocumentView(windowSizeController);
         documentController = new DocumentController(documentViewer, cursorController);
-        dictionary = new EditTextCommandDictionary(documentController);
+        
+        dictionary = new EditTextCommandDictionary(documentController, commandProcessor);
     }
     public void Start()
     {
