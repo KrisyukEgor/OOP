@@ -44,7 +44,7 @@ namespace OOP_2__console_text_editor_.Views
 
             for (int i = 0; i < document.Lines.Count; i++)
             {
-                string line = document.Lines[i];
+                var line = document.Lines[i];
 
                 PrintLine(line);
                 // for (int j = 0; j < line.Length; j += windowWidth)
@@ -57,59 +57,18 @@ namespace OOP_2__console_text_editor_.Views
             SetCursorPosition();
         }
 
-        public void RenderWithSelection(Document document, int firstLineIndex, List<(int, int )> selection)
-        {
-            
-            _firstLineIndex = firstLineIndex;
-            ClearArea();
-
-            int w = _windowSizeController.Width;
-            int h = _windowSizeController.Height;
-            int drawn = 0;
-
-            var selSet = new HashSet<(int X, int Y)>(selection);
-
-            for (int docY = firstLineIndex; docY < document.Lines.Count && drawn < h; docY++)
-            {
-                string line = document.Lines[docY];
-                int chunks = Math.Max(1, (line.Length + w - 1) / w);
-
-                for (int chunkIdx = 0; chunkIdx < chunks && drawn < h; chunkIdx++, drawn++)
-                {
-                    int offsetX = chunkIdx * w;
-                    int len = Math.Min(w, line.Length - offsetX);
-                    string chunk = len > 0 ? line.Substring(offsetX, len) : "";
-
-                    PrintChunkWithSelection(chunk, docY, offsetX, selSet);
-                }
-            }
-            SetCursorPosition();
-        }
+       
         public void ClearArea()
         {
             Console.Clear();   //возможно потом изменю
         }
 
-        private void PrintLine(string line)
+        private void PrintLine(StyledString line)
         {
-            Console.WriteLine(line); //возможно потом изменю
-        }
-        
-        private void PrintChunkWithSelection(string chunk, int docY, int offsetX, HashSet<(int X, int Y)> selSet)
-        {
-            for (int i = 0; i < chunk.Length; i++)
-            {
-                var pos = (X: offsetX + i, Y: docY);
-                if (selSet.Contains(pos))
-                {
-                    Console.BackgroundColor = ConsoleColor.DarkGray;
-                    Console.ForegroundColor = ConsoleColor.DarkRed;
-                }
 
-                Console.Write(chunk[i]);
-                Console.ResetColor();
-            }
+            Console.WriteLine(line.GetString()); //возможно потом изменю
             
         }
+        
     }
 }

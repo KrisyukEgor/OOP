@@ -2,22 +2,22 @@ namespace OOP_2__console_text_editor_.Models;
 
 public class Document
 {
-    
-    private List<string> _linesList;
+
+    private List<StyledString> _linesList;
 
     public Document()
     {
-        _linesList = new List<string> { "" };
+        _linesList = new() {new StyledString()};
     }
 
-    public List<string> Lines
+    public List<StyledString> Lines
     {
         get { return _linesList; }
         set { _linesList = value; }
     }
 
 
-    public string GetLine(int index)
+    public StyledString GetLine(int index)
     {
         return _linesList[index];
     }

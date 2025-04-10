@@ -7,5 +7,4 @@ public interface IDocumentViewer
 {
     void Render(Document document,int firstLineIndex);
     void SetCursorPosition(int x, int y);
-    void RenderWithSelection(Document document, int firstLineIndex, List<(int, int)> selection);
 }

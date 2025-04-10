@@ -7,11 +7,14 @@ namespace OOP_2__console_text_editor_.Commands.Text;
 public class PrintCharCommand : ICommand
 {
     DocumentController controller;
-    private char? symbol;
+    private StyledSymbol? symbol;
     
     public PrintCharCommand(DocumentController controller, char symbol)
     {
-        this.symbol = symbol;
+        StyledSymbol styledSymbol = new StyledSymbol();
+        styledSymbol.Symbol = symbol;
+        
+        this.symbol = styledSymbol;
         this.controller = controller; 
     }
     
@@ -19,7 +22,7 @@ public class PrintCharCommand : ICommand
     {
         if (symbol != null)
         {
-            controller.InsertChar(symbol.Value);
+            controller.InsertChar(symbol);
         }
     }
 

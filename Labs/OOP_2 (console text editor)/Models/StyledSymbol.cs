@@ -2,6 +2,9 @@ namespace OOP_2__console_text_editor_.Models;
 
 public class StyledSymbol
 {
+    public StyledSymbol()
+    {
+    }
     public char Symbol { get; set; }
     public bool IsBold { get; set; }
     public bool IsItalic { get; set; }

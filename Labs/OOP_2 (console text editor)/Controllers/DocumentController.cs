@@ -31,10 +31,10 @@ public class DocumentController
         this.document = document;
         _cursorController.SetDocument(document);
         _scrollOffset = 0;
+
         UpdateView();
-
     }
-
+    
     public void SetCursorPosition(int x, int y)
     {
         _cursorController.SetPosition(x, y);
@@ -45,7 +45,7 @@ public class DocumentController
     }
 
     
-    public void InsertLine(string line)
+    public void InsertLine(StyledString line)
     {
         if (document == null) return;
         
@@ -73,34 +73,34 @@ public class DocumentController
         UpdateView();
     }
     
-    public void InsertChar(char symbol)
+    public void InsertChar(StyledSymbol symbol)
     {
         if (document == null) return;
         
         var (cursorX, cursorY) = _cursorController.GetPosition();
         
-        _documentEditor.InsertChar(document, cursorY, cursorX, symbol);
+        _documentEditor.InsertSymbol(document, cursorY, cursorX, symbol);
         MoveCursorRight();
         
         UpdateView();
     }
 
-    public char? RemoveChar()
+    public StyledSymbol? RemoveChar()
     {
         if (document == null) 
             return null;
 
-        char? removedSymbol = null;
+        StyledSymbol? removedSymbol = null;
         var (cursorX, cursorY) = _cursorController.GetPosition();
 
         if (cursorX > 0)
         {
-            removedSymbol = _documentEditor.RemoveChar(document, cursorY, cursorX - 1);
+            removedSymbol = _documentEditor.RemoveSymbol(document, cursorY, cursorX - 1);
             _cursorController.MoveLeft();
         }
         else if (cursorY > 0)
         {
-            string currentLineText = document.Lines[cursorY];
+            var currentLineText = document.Lines[cursorY];
 
             _documentEditor.RemoveLine(document, cursorY);
 
@@ -122,10 +122,10 @@ public class DocumentController
         
         var (cursorX, cursorY) = _cursorController.GetPosition();
         
-        string currentLineText = document.Lines[cursorY];
+        var currentLineText = document.Lines[cursorY];
         
-        string firstPart = currentLineText.Substring(0, cursorX);
-        string secondPart = currentLineText.Substring(cursorX );
+        var firstPart = currentLineText.Substring(0, cursorX);
+        var secondPart = currentLineText.Substring(cursorX );
         
         _documentEditor.UpdateLine(document, cursorY, firstPart);
         _documentEditor.InsertLine(document, cursorY + 1, secondPart);
@@ -168,7 +168,7 @@ public class DocumentController
 
     private void UpdateView()
     {
-        if (document == null) return;
+        if (document == null || document.Lines.Count == 0) return;
         
         var (x, y) = _cursorController.GetPosition();
          
@@ -193,7 +193,7 @@ public class DocumentController
         var (endX, endY) = _cursorController.GetPosition();
         selectionService.UpdateSelection(endX, endY);
 
-        UpdateViewWithSelection();
+        UpdateView();
     }
 
     public void SelectRight()
@@ -211,19 +211,9 @@ public class DocumentController
         var (endX, endY) = _cursorController.GetPosition();
         selectionService.UpdateSelection(endX, endY);
 
-        UpdateViewWithSelection();
+        UpdateView();
     }
     
-    private void UpdateViewWithSelection()
-    {
-        if (document == null) return;
-
-        var (x, y) = _cursorController.GetPosition();
-        _documentViewer.SetCursorPosition(x, y - _scrollOffset);
-
-        List<(int, int)> selection = selectionService.GetSelection();
-        _documentViewer.RenderWithSelection(document, _scrollOffset, selection);
-    }
     
     private string GetSelectedText()
     {

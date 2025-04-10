@@ -138,7 +138,7 @@ public class CursorController
 
         cursor.Y = Math.Clamp(cursor.Y, 0, document.Lines.Count - 1);
 
-        string currentLine = document.Lines[cursor.Y];
+        StyledString currentLine = document.Lines[cursor.Y];
     
         cursor.X = Math.Clamp(cursor.X, 0, currentLine.Length);
     }

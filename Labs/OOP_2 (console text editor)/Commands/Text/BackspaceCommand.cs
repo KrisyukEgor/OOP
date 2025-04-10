@@ -1,12 +1,13 @@
 using OOP_2__console_text_editor_.Controllers;
 using OOP_2__console_text_editor_.Interfaces;
+using OOP_2__console_text_editor_.Models;
 
 namespace OOP_2__console_text_editor_.Commands.Text;
 
 public class BackspaceCommand : ICommand
 {
     private DocumentController documentController;
-    private char? removedSymbol;
+    private StyledSymbol? removedSymbol;
     
     public BackspaceCommand(DocumentController documentController)
     {
@@ -21,7 +22,7 @@ public class BackspaceCommand : ICommand
     {
         if (removedSymbol != null)
         {
-            documentController.InsertChar(removedSymbol.Value);
+            documentController.InsertChar(removedSymbol);
         }
     }
 }
