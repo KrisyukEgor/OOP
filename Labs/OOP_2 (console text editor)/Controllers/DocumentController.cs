@@ -8,8 +8,12 @@ public class DocumentController
 { 
     private Document? document = null;
     private readonly IDocumentViewer _documentViewer;
+    
     private readonly CursorController _cursorController;
     private readonly DocumentEditor _documentEditor;
+    private readonly TextDecoratorService _textDecoratorService;
+    private readonly SelectionService selectionService;
+    
     private int _scrollOffset = 0;
 
     public DocumentController(IDocumentViewer documentViewer, CursorController cursorController)
@@ -18,47 +22,28 @@ public class DocumentController
         _documentViewer = documentViewer;
         _cursorController = cursorController;
         _documentEditor = new DocumentEditor();
+        _textDecoratorService = new TextDecoratorService();
+        selectionService = new SelectionService();
     }
 
     public void SetDocument(Document document)
     {
         this.document = document;
         _cursorController.SetDocument(document);
-        _documentViewer.Document = document;
-        
         _scrollOffset = 0;
         UpdateView();
 
     }
 
+    public void SetCursorPosition(int x, int y)
+    {
+        _cursorController.SetPosition(x, y);
+    }
     public (int, int) GetCursorPosition()
     {
         return _cursorController.GetPosition();
     }
 
-    public void MoveCursorLeft()
-    {
-        _cursorController.MoveLeft();
-        _documentViewer.SetCursorPosition(_cursorController.GetX(), _cursorController.GetY());
-    }
-
-    public void MoveCursorRight()
-    {
-        _cursorController.MoveRight();
-        _documentViewer.SetCursorPosition(_cursorController.GetX(), _cursorController.GetY());
-    }
-
-    public void MoveCursorUp()
-    {
-        _cursorController.MoveUp();
-        _documentViewer.SetCursorPosition(_cursorController.GetX(), _cursorController.GetY());
-    }
-
-    public void MoveCursorDown()
-    {
-        _cursorController.MoveDown();
-        _documentViewer.SetCursorPosition(_cursorController.GetX(), _cursorController.GetY());
-    }
     
     public void InsertLine(string line)
     {
@@ -95,15 +80,15 @@ public class DocumentController
         var (cursorX, cursorY) = _cursorController.GetPosition();
         
         _documentEditor.InsertChar(document, cursorY, cursorX, symbol);
-        _cursorController.MoveRight();
+        MoveCursorRight();
         
         UpdateView();
     }
 
-    public char RemoveChar()
+    public char? RemoveChar()
     {
         if (document == null) 
-            return '\0';
+            return null;
 
         char? removedSymbol = null;
         var (cursorX, cursorY) = _cursorController.GetPosition();
@@ -119,19 +104,67 @@ public class DocumentController
 
             _documentEditor.RemoveLine(document, cursorY);
 
-            _cursorController.MoveUp();
-            _cursorController.MoveToEndLine();
+            MoveCursorUp();
+            _cursorController.MoveToLineEnd();
 
             _documentEditor.UpdateLine( document, _cursorController.GetY(), document.Lines[_cursorController.GetY()] + currentLineText);
 
-            removedSymbol = '\n';
         }
 
         UpdateView();
 
-        return removedSymbol ?? '\0';
+        return removedSymbol;
     }
 
+    public void BreakLine()
+    {
+        if (document == null) return;
+        
+        var (cursorX, cursorY) = _cursorController.GetPosition();
+        
+        string currentLineText = document.Lines[cursorY];
+        
+        string firstPart = currentLineText.Substring(0, cursorX);
+        string secondPart = currentLineText.Substring(cursorX );
+        
+        _documentEditor.UpdateLine(document, cursorY, firstPart);
+        _documentEditor.InsertLine(document, cursorY + 1, secondPart);
+        
+        _cursorController.MoveToLineStart();
+        MoveCursorDown();
+        
+        UpdateView();
+    }
+
+    public void MoveCursorLeft()
+    {
+        _cursorController.MoveLeft();
+        _documentViewer.SetCursorPosition(_cursorController.GetX(), _cursorController.GetY());
+    }
+
+    public void MoveCursorRight()
+    {
+        _cursorController.MoveRight();
+        _documentViewer.SetCursorPosition(_cursorController.GetX(), _cursorController.GetY());
+    }
+
+    public void MoveCursorUp()
+    {
+        _cursorController.MoveUp();
+        _documentViewer.SetCursorPosition(_cursorController.GetX(), _cursorController.GetY());
+    }
+
+    public void MoveCursorDown()
+    {
+        _cursorController.MoveDown(); 
+        _documentViewer.SetCursorPosition(_cursorController.GetX(), _cursorController.GetY());
+    }
+
+    public void MoveCursorToEndLine()
+    {
+        _cursorController.MoveToLineEnd();
+        _documentViewer.SetCursorPosition(_cursorController.GetX(), _cursorController.GetY());
+    }
 
     private void UpdateView()
     {
@@ -141,8 +174,77 @@ public class DocumentController
          
         _documentViewer.SetCursorPosition(x, y - _scrollOffset);
         
-        _documentViewer.Render(_scrollOffset);
+        _documentViewer.Render(document, _scrollOffset);
         
     }
+
+    public void SelectLeft()
+    {
+        if (document == null) return;
+
+        if (!selectionService.IsSelectionActive)
+        {
+            var (startX, startY) = _cursorController.GetPosition();
+            selectionService.StartSelection(startX, startY);
+        }
+
+        _cursorController.MoveLeft();
+
+        var (endX, endY) = _cursorController.GetPosition();
+        selectionService.UpdateSelection(endX, endY);
+
+        UpdateViewWithSelection();
+    }
+
+    public void SelectRight()
+    {
+        if (document == null) return;
+
+        if (!selectionService.IsSelectionActive)
+        {
+            var (startX, startY) = _cursorController.GetPosition();
+            selectionService.StartSelection(startX, startY);
+        }
+
+        _cursorController.MoveRight();
+
+        var (endX, endY) = _cursorController.GetPosition();
+        selectionService.UpdateSelection(endX, endY);
+
+        UpdateViewWithSelection();
+    }
     
+    private void UpdateViewWithSelection()
+    {
+        if (document == null) return;
+
+        var (x, y) = _cursorController.GetPosition();
+        _documentViewer.SetCursorPosition(x, y - _scrollOffset);
+
+        List<(int, int)> selection = selectionService.GetSelection();
+        _documentViewer.RenderWithSelection(document, _scrollOffset, selection);
+    }
+    
+    private string GetSelectedText()
+    {
+        return "123";
+    }
+    
+    public void SetBoldText()
+    {
+        string text = GetSelectedText();
+        string boldText = _textDecoratorService.GetBoldText(text);
+        
+    }
+
+    public void SetItalicText()
+    {
+        
+    }
+
+    public void SetUnderlineText()
+    {
+        
+    }
+
 }

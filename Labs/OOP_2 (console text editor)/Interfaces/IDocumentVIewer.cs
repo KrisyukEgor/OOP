@@ -5,7 +5,7 @@ namespace OOP_2__console_text_editor_.Interfaces;
 
 public interface IDocumentViewer
 {
-    void Render(int firstLineIndex);
+    void Render(Document document,int firstLineIndex);
     void SetCursorPosition(int x, int y);
-    Document Document { get; set; }
+    void RenderWithSelection(Document document, int firstLineIndex, List<(int, int)> selection);
 }

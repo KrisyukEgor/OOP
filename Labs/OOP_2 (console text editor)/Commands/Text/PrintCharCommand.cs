@@ -6,9 +6,8 @@ namespace OOP_2__console_text_editor_.Commands.Text;
 
 public class PrintCharCommand : ICommand
 {
-    Document document;
     DocumentController controller;
-    private char symbol;
+    private char? symbol;
     
     public PrintCharCommand(DocumentController controller, char symbol)
     {
@@ -18,11 +17,14 @@ public class PrintCharCommand : ICommand
     
     public void Execute()
     {
-        controller.InsertChar(symbol);
+        if (symbol != null)
+        {
+            controller.InsertChar(symbol.Value);
+        }
     }
 
     public void UnExecute()
     {
-        controller.RemoveChar();
+        symbol = controller.RemoveChar();
     }
 }

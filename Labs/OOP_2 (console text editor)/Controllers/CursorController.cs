@@ -35,6 +35,12 @@ public class CursorController
         ResetPosition();
     }
 
+    public void SetPosition(int x, int y)
+    {
+        cursor.X = x;
+        cursor.Y = y;
+    }
+
 
     public void ResetPosition()
     {
@@ -104,12 +110,12 @@ public class CursorController
         UpdatePosition();
     }
 
-    public void MoveToStartLine()
+    public void MoveToLineStart()
     {
         cursor.X = 0;
     }
 
-    public void MoveToEndLine()
+    public void MoveToLineEnd()
     {
         if (document != null)
         {

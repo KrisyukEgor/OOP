@@ -11,6 +11,8 @@ public class InputController
     private IDictionary _dictionary;
     private CommandProcessor _commandProcessor;
     
+    private bool _shiftDown;
+    
     public InputController()
     {
         _inputHandler = new InputHandler();
@@ -24,6 +26,7 @@ public class InputController
     
     public void Start()
     {
+        
         _inputHandler.KeyPressed += ControlInputKey;
         _inputHandler.StartListening();
     }
@@ -34,6 +37,7 @@ public class InputController
         {
             _inputHandler.StopListening();
             _inputHandler.KeyPressed -= ControlInputKey;
+            
         }
         
         try
@@ -48,7 +52,7 @@ public class InputController
             {
                 command.Execute();
             }
-            else
+            else if(command != null)
             {
                 _commandProcessor.ExecuteCommand(command);
             }
@@ -60,4 +64,6 @@ public class InputController
             Console.WriteLine($"Error: {ex.Message}");
         }
     }
+    
+    
 }

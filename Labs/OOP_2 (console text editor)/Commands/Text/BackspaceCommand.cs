@@ -6,7 +6,8 @@ namespace OOP_2__console_text_editor_.Commands.Text;
 public class BackspaceCommand : ICommand
 {
     private DocumentController documentController;
-    private char removedSymbol;
+    private char? removedSymbol;
+    
     public BackspaceCommand(DocumentController documentController)
     {
         this.documentController = documentController;
@@ -18,6 +19,9 @@ public class BackspaceCommand : ICommand
 
     public void UnExecute()
     {
-        documentController.InsertChar(removedSymbol);
+        if (removedSymbol != null)
+        {
+            documentController.InsertChar(removedSymbol.Value);
+        }
     }
 }

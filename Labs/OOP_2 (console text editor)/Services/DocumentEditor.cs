@@ -7,12 +7,11 @@ public class DocumentEditor
     public DocumentEditor() {}
     public void InsertLine(Document document, int index, string line)
     {
-        var linesList = document.Lines;
+        List<string> linesList = document.Lines;
         
         ValidateLineIndex(linesList, index, maxInclude: true);
         linesList.Insert(index, line);
         
-        document.Lines = linesList;
     }
 
     public void RemoveLine(Document document, int index)
@@ -22,7 +21,6 @@ public class DocumentEditor
         ValidateLineIndex(linesList, index);
         linesList.RemoveAt(index);
         
-        document.Lines = linesList;
     }
 
     public void UpdateLine(Document document, int index, string line)
@@ -32,7 +30,6 @@ public class DocumentEditor
         ValidateLineIndex(linesList, index);
         linesList[index] = line;
         
-        document.Lines = linesList;
         
     }
 
@@ -43,7 +40,6 @@ public class DocumentEditor
         ValidateColumnIndex(linesList, y, x, allowEnd: true);
         
         linesList[y] = linesList[y].Insert(x, symbol.ToString());
-        document.Lines = linesList;
 
     }
 
