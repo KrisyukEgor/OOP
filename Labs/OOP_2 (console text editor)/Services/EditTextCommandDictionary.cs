@@ -2,6 +2,7 @@ using OOP_2__console_text_editor_.Commands.Cursor;
 using OOP_2__console_text_editor_.Commands.HotKeys;
 using OOP_2__console_text_editor_.Commands.Select;
 using OOP_2__console_text_editor_.Commands.Text;
+using OOP_2__console_text_editor_.Commands.TextDecorator;
 using OOP_2__console_text_editor_.Controllers;
 using OOP_2__console_text_editor_.Interfaces;
 using OOP_2__console_text_editor_.Models;
@@ -56,6 +57,10 @@ public class EditTextCommandDictionary : IDictionary
         
         _commands.Add((ConsoleKey.RightArrow, ConsoleModifiers.Shift), () => new SelectRightCommand(_documentController));
         _commands.Add((ConsoleKey.LeftArrow, ConsoleModifiers.Shift), () => new SelectLeftCommand(_documentController));
+        
+        _commands.Add((ConsoleKey.B, ConsoleModifiers.Control), () => new BoldCommand(_documentController));
+        _commands.Add((ConsoleKey.I, ConsoleModifiers.Control), () => new ItalicCommand(_documentController));
+        _commands.Add((ConsoleKey.U, ConsoleModifiers.Control), () => new UnderlineCommand(_documentController));
     }
     
 }

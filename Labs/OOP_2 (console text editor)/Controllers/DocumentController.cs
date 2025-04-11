@@ -187,44 +187,121 @@ public class DocumentController
             var (startX, startY) = _cursorController.GetPosition();
             selectionService.StartSelection(startX, startY);
         }
-
+        
         _cursorController.MoveLeft();
-
+        
         var (endX, endY) = _cursorController.GetPosition();
         selectionService.UpdateSelection(endX, endY);
-
+        
+        
+        StyledString selectedString = GetSelectedText();
+        
+        for (int i = 0; i < selectedString.Length; i++)
+        {
+            selectedString.GetStyledSymbol(i).IsSelected = true;
+        }
+        
         UpdateView();
     }
 
     public void SelectRight()
     {
         if (document == null) return;
-
+        
         if (!selectionService.IsSelectionActive)
         {
             var (startX, startY) = _cursorController.GetPosition();
             selectionService.StartSelection(startX, startY);
         }
-
+        
         _cursorController.MoveRight();
-
+        
         var (endX, endY) = _cursorController.GetPosition();
         selectionService.UpdateSelection(endX, endY);
-
+        
+        StyledString selectedString = GetSelectedText();
+        
+        for (int i = 0; i < selectedString.Length; i++)
+        {
+            selectedString.GetStyledSymbol(i).IsSelected = true;
+        }
         UpdateView();
     }
     
     
-    private string GetSelectedText()
+    private StyledString GetSelectedText()
     {
-        return "123";
+        if(document == null) return new StyledString();
+        
+        if (!selectionService.IsSelectionActive)
+            return new StyledString();
+        
+        var (startX, startY) = selectionService.GetSelectionStart();
+        var (endX, endY) = selectionService.GetSelectionEnd();
+        
+        if (startY > endY || (startY == endY && startX > endX))
+        {
+            (startX, endX) = (endX, startX);
+            (startY, endY) = (endY, startY);
+        }
+        
+        var result = new StyledString();
+
+        if (startY == endY)
+        {
+            var line = document.GetLine(startY);
+            int length = endX - startX ;
+            var part = line.Substring(startX, length);
+
+            
+            for (int i = 0; i < part.Length; i++)
+                result.AddSymbol(part.GetStyledSymbol(i));
+            return result;
+        }
+        
+        {
+            var first = document.GetLine(startY);
+            var part = first.Substring(startX);   
+            
+            for (int i = 0; i < part.Length; i++)
+                result.AddSymbol(part.GetStyledSymbol(i));
+            
+        }
+        
+        for (int y = startY + 1; y < endY; y++)
+        {
+            var mid = document.GetLine(y);
+
+            for (int i = 0; i < mid.Length; i++)
+                result.AddSymbol(mid.GetStyledSymbol(i));
+            
+        }
+        
+        {
+            var last = document.GetLine(endY);
+            int length = endX + 1;                  
+            var part = last.Substring(0, length);
+            for (int i = 0; i < part.Length; i++)
+                result.AddSymbol(part.GetStyledSymbol(i));
+        }
+        
+        return result;
     }
     
     public void SetBoldText()
     {
-        string text = GetSelectedText();
-        string boldText = _textDecoratorService.GetBoldText(text);
+        var selectedString = GetSelectedText();
         
+        // Console.WriteLine(selectedString.ToString());
+        for (int i = 0; i < selectedString.Length; ++i)
+        {
+            selectedString.GetStyledSymbol(i).IsBold = true;
+            selectedString.GetStyledSymbol(i).IsSelected = false;
+            selectionService.Reset();
+        }
+        
+        UpdateView();
+
     }
 
     public void SetItalicText()

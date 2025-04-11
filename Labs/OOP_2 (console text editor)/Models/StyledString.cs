@@ -116,15 +116,17 @@ public class StyledString
             result.AddSymbol(styledStr.GetStyledSymbol(i));
         }
         
-        result.AddSymbol(new StyledSymbol
-        {
-            Symbol = sym.Symbol,
-            IsBold = sym.IsBold,
-            IsItalic = sym.IsItalic,
-            IsUnderline = sym.IsUnderline,
-            TextColor = sym.TextColor,
-            BackgroundColor = sym.BackgroundColor
-        });
+        // result.AddSymbol(new StyledSymbol
+        // {
+        //     Symbol = sym.Symbol,
+        //     IsBold = sym.IsBold,
+        //     IsItalic = sym.IsItalic,
+        //     IsUnderline = sym.IsUnderline,
+        //     TextColor = sym.TextColor,
+        //     BackgroundColor = sym.BackgroundColor
+        // });
+        
+        result.AddSymbol(sym);
 
         return result;
     }

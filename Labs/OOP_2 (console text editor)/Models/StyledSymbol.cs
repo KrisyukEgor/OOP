@@ -9,6 +9,8 @@ public class StyledSymbol
     public bool IsBold { get; set; }
     public bool IsItalic { get; set; }
     public bool IsUnderline { get; set; }
+    
+    public bool IsSelected { get; set; }
     public ConsoleColor TextColor { get; set; }
     public ConsoleColor BackgroundColor { get; set; }
 }
