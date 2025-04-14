@@ -19,6 +19,6 @@ public class SelectLeftCommand : ICommand
  
     public void UnExecute()
     {
-        // controller.SelectRight();
+        controller.SelectRight();
     }
 }

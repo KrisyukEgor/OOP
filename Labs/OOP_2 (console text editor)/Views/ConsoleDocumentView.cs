@@ -81,8 +81,7 @@ namespace OOP_2__console_text_editor_.Views
                     isPrinted = true;
                 }
                 
-
-                if (styledSymbol.IsBold || styledSymbol.IsItalic || styledSymbol.IsUnderline) 
+                else if (styledSymbol.IsBold || styledSymbol.IsItalic || styledSymbol.IsUnderline) 
                 {
                     HandleDecoratedSymbol(styledSymbol);
                     isPrinted = true;
@@ -92,10 +91,11 @@ namespace OOP_2__console_text_editor_.Views
                 {
                     Console.Write(styledSymbol.Symbol);
                 }
-                
+
+                isPrinted = false;
+
             }
-            
-            
+            Console.WriteLine();
         }
 
         private void HandleSelectedSymbol(StyledSymbol styledSymbol)

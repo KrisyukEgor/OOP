@@ -3,6 +3,7 @@ using OOP_2__console_text_editor_.Interfaces;
 using OOP_2__console_text_editor_.Models;
 using OOP_2__console_text_editor_.Services;
 using OOP_2__console_text_editor_.Views;
+using Buffer = OOP_2__console_text_editor_.Models;
 
 namespace OOP_2__console_text_editor_.Controllers;
 
@@ -10,27 +11,22 @@ public class AppController
 {
     private IDictionary dictionary;
     private IDocumentViewer documentViewer;
+    private DocumentController documentController ;
     
-    private DocumentCreator documentCreator;
-    private InputController inputController;
-    private DocumentController documentController;
-    private CommandProcessor commandProcessor;
-    private WindowSizeController windowSizeController;
-    private CursorController cursorController;
+    private DocumentCreator documentCreator = new();
+    private InputController inputController = new();
+    private CommandProcessor commandProcessor = new();
+    private WindowSizeController windowSizeController = new();
+    private CursorController cursorController = new();
+    private IBuffer buffer;
 
     public AppController ()
     {
-        documentCreator = new DocumentCreator();
-        windowSizeController = new WindowSizeController();
-        
-        inputController = new InputController();
-        commandProcessor = new CommandProcessor();
-        cursorController = new CursorController();
-
+        buffer = new DocumentBuffer();
         documentViewer = new ConsoleDocumentView(windowSizeController);
-        documentController = new DocumentController(documentViewer, cursorController);
+        documentController = new DocumentController(documentViewer, cursorController, buffer);
         
-        dictionary = new EditTextCommandDictionary(documentController, commandProcessor);
+        dictionary = new DocumentCommandDictionary(documentController, commandProcessor);
     }
     public void Start()
     {

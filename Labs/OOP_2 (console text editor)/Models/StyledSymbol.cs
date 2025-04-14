@@ -5,6 +5,18 @@ public class StyledSymbol
     public StyledSymbol()
     {
     }
+
+    public StyledSymbol(StyledSymbol symbol)
+    {
+        Symbol = symbol.Symbol;
+        IsBold = symbol.IsBold;
+        IsItalic = symbol.IsItalic;
+        IsUnderline = symbol.IsUnderline;
+        IsSelected = symbol.IsSelected;
+        TextColor = symbol.TextColor;
+        BackgroundColor = symbol.BackgroundColor;
+        
+    }
     public char Symbol { get; set; }
     public bool IsBold { get; set; }
     public bool IsItalic { get; set; }

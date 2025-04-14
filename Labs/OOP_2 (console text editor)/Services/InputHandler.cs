@@ -10,6 +10,7 @@ public class InputHandler
 
     public void StartListening()
     {
+        Console.TreatControlCAsInput = true;
         while (_isRunning)
         {
             var keyInfo = Console.ReadKey(intercept: true);

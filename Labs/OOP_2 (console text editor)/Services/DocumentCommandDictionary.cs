@@ -9,13 +9,13 @@ using OOP_2__console_text_editor_.Models;
 
 namespace OOP_2__console_text_editor_.Services;
 
-public class EditTextCommandDictionary : IDictionary
+public class DocumentCommandDictionary : IDictionary
 {
     private readonly Dictionary<(ConsoleKey Key, ConsoleModifiers Mods), Func<ICommand>> _commands = new();
     private DocumentController _documentController;
     private CommandProcessor _commandProcessor;
 
-    public EditTextCommandDictionary(DocumentController documentController, CommandProcessor commandProcessor)
+    public DocumentCommandDictionary(DocumentController documentController, CommandProcessor commandProcessor)
     {
         _documentController = documentController;
         _commandProcessor = commandProcessor;
@@ -61,6 +61,11 @@ public class EditTextCommandDictionary : IDictionary
         _commands.Add((ConsoleKey.B, ConsoleModifiers.Control), () => new BoldCommand(_documentController));
         _commands.Add((ConsoleKey.I, ConsoleModifiers.Control), () => new ItalicCommand(_documentController));
         _commands.Add((ConsoleKey.U, ConsoleModifiers.Control), () => new UnderlineCommand(_documentController));
+        
+        _commands.Add((ConsoleKey.C, ConsoleModifiers.Control), () => new CopyCommand(_documentController));
+        _commands.Add((ConsoleKey.V, ConsoleModifiers.Control), () => new PasteCommand(_documentController));
+        
+
     }
     
 }

@@ -10,26 +10,13 @@ public class StyledString
         _styledString = new List<StyledSymbol>() ;
     }
     
-    // public StyledString(string text, 
-    //     bool isBold = false, 
-    //     bool isItalic = false, 
-    //     bool isUnderline = false, 
-    //     ConsoleColor textColor = ConsoleColor.White, 
-    //     ConsoleColor backgroundColor = ConsoleColor.Black)
-    // {
-    //     foreach (char c in text)
-    //     {
-    //         _styledString.Add(new StyledSymbol
-    //         {
-    //             Symbol = c,
-    //             IsBold = isBold,
-    //             IsItalic = isItalic,
-    //             IsUnderline = isUnderline,
-    //             TextColor = textColor,
-    //             BackgroundColor = backgroundColor
-    //         });
-    //     }
-    // }
+    public StyledString(StyledString styledString)
+    {
+        for (int i = 0; i < styledString.Length; i++)
+        {
+            _styledString.Add(new StyledSymbol(styledString.GetStyledSymbol(i)));
+        }
+    }
 
     public StyledSymbol GetStyledSymbol(int position)
     {
@@ -116,20 +103,14 @@ public class StyledString
             result.AddSymbol(styledStr.GetStyledSymbol(i));
         }
         
-        // result.AddSymbol(new StyledSymbol
-        // {
-        //     Symbol = sym.Symbol,
-        //     IsBold = sym.IsBold,
-        //     IsItalic = sym.IsItalic,
-        //     IsUnderline = sym.IsUnderline,
-        //     TextColor = sym.TextColor,
-        //     BackgroundColor = sym.BackgroundColor
-        // });
-        
         result.AddSymbol(sym);
 
         return result;
     }
 
-
+    public bool Contains(StyledSymbol symbol)
+    {
+        return _styledString.Contains(symbol);
+    }
+    
 }

@@ -85,30 +85,37 @@ public class CursorController
         else if (cursor.Y > 0 && document != null)
         {
             cursor.Y--;
-            cursor.X = document.Lines[cursor.Y].Length;
+            MoveToLineEnd();
         }
 
         UpdatePosition();
     }
+
 
     public void MoveRight()
     {
-        if (document == null) return;
+        if (document == null) 
+            return;  
 
-        int lineLength = document.Lines[cursor.Y].Length;
+        var currentLine = document.Lines[cursor.Y];
+        bool atEndOfLine = cursor.X >= currentLine.Length;
+        bool atBreakSymbol = !atEndOfLine && currentLine.GetStyledSymbol(cursor.X).Symbol == '\0';
         
-        if (cursor.X < lineLength)
+        if (atEndOfLine || atBreakSymbol)
         {
-            cursor.X++;
+            if (cursor.Y < document.Lines.Count - 1)
+            {
+                cursor.Y++;
+                MoveToLineStart();
+            }
+            return;
         }
-        else if (cursor.Y < document.Lines.Count - 1)
-        {
-            cursor.Y++;
-            cursor.X = 0;
-        }
-
+        
+        cursor.X++;
         UpdatePosition();
     }
+
+
 
     public void MoveToLineStart()
     {
@@ -119,29 +126,40 @@ public class CursorController
     {
         if (document != null)
         {
-            cursor.X = document.Lines[cursor.Y].Length;
+            var line = document.Lines[cursor.Y];
+            cursor.X = line.Length;
+            
+            if (line.Length > 0 && line.GetStyledSymbol(line.Length - 1).Symbol == '\0')
+            {
+                cursor.X = line.Length - 1;
+            }
         }
     }
     
 
     private void UpdatePosition()
     {
-        if (document == null)
-            return;
+        if (document == null) return;
 
         if (document.Lines.Count == 0)
         {
-            cursor.Y = 0;
             cursor.X = 0;
+            cursor.Y = 0;
             return;
         }
 
         cursor.Y = Math.Clamp(cursor.Y, 0, document.Lines.Count - 1);
+        
+        var currentLine = document.Lines[cursor.Y];
+        var maxX = currentLine.Length;
+        
 
-        StyledString currentLine = document.Lines[cursor.Y];
-    
-        cursor.X = Math.Clamp(cursor.X, 0, currentLine.Length);
+        if (currentLine.Length > 0 && currentLine.GetStyledSymbol(currentLine.Length - 1).Symbol == '\0')
+        {
+            maxX = currentLine.Length - 1;
+        }
+        
+        cursor.X = Math.Clamp(cursor.X, 0, maxX);
     }
-    
 
 }

@@ -1,11 +1,13 @@
 using OOP_2__console_text_editor_.Controllers;
 using OOP_2__console_text_editor_.Interfaces;
+using OOP_2__console_text_editor_.Models;
 
 namespace OOP_2__console_text_editor_.Commands.TextDecorator;
 
 public class ItalicCommand : ICommand
 {
     private DocumentController documentController;
+    private StyledString selectedString;
     
     public ItalicCommand(DocumentController documentController)
     {
@@ -13,11 +15,11 @@ public class ItalicCommand : ICommand
     }
     public void Execute()
     {
-        documentController.SetItalicText();
+        selectedString = documentController.SetItalicText();
     }
 
     public void UnExecute()
     {
-        
+        documentController.UnsetItalicText(selectedString);
     }
 }
