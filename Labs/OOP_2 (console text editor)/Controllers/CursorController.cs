@@ -1,3 +1,4 @@
+using OOP_2__console_text_editor_.Interfaces;
 using OOP_2__console_text_editor_.Models;
 
 namespace OOP_2__console_text_editor_.Controllers;
@@ -6,9 +7,12 @@ public class CursorController
 {
     private Cursor cursor;
     private Document? document;
+    private ICursorViewer cursorViewer;
 
-    public CursorController()
+    public CursorController(ICursorViewer cursorViewer)
     {
+        this.cursorViewer = cursorViewer;
+        
         cursor = new Cursor();
         cursor.X = 0;
         cursor.Y = 0;
@@ -56,7 +60,7 @@ public class CursorController
         }
     }
 
-    public void MoveUp()
+    public void MoveCursorUp()
     {
         if (cursor.Y > 0)
         {
@@ -65,7 +69,7 @@ public class CursorController
         }
     }
 
-    public void MoveDown()
+    public void MoveCursorDown()
     {
         if (document == null) return;
 
@@ -76,7 +80,7 @@ public class CursorController
         }
     }
 
-    public void MoveLeft()
+    public void MoveCursorLeft()
     {
         if (cursor.X > 0)
         {
@@ -92,7 +96,7 @@ public class CursorController
     }
 
 
-    public void MoveRight()
+    public void MoveCursorRight()
     {
         if (document == null) 
             return;  
@@ -137,7 +141,7 @@ public class CursorController
     }
     
 
-    private void UpdatePosition()
+    public void UpdatePosition()
     {
         if (document == null) return;
 
@@ -160,6 +164,8 @@ public class CursorController
         }
         
         cursor.X = Math.Clamp(cursor.X, 0, maxX);
+        
+        cursorViewer.SetCursorPosition(cursor.X, cursor.Y);
     }
 
 }

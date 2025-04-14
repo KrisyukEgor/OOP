@@ -1,28 +1,29 @@
 using OOP_2__console_text_editor_.Controllers;
 using OOP_2__console_text_editor_.Interfaces;
 using OOP_2__console_text_editor_.Models;
+using OOP_2__console_text_editor_.Services;
 
 namespace OOP_2__console_text_editor_.Commands.Text;
 
 public class BackspaceCommand : ICommand
 {
-    private DocumentController documentController;
+    private TextEditService textEditService;
     private StyledSymbol? removedSymbol;
     
-    public BackspaceCommand(DocumentController documentController)
+    public BackspaceCommand(TextEditService textEditService)
     {
-        this.documentController = documentController;
+        this.textEditService = textEditService;
     }
     public void Execute()
     {
-        removedSymbol = documentController.RemoveChar();
+        removedSymbol = textEditService.RemoveChar();
     }
 
     public void UnExecute()
     {
         if (removedSymbol != null)
         {
-            documentController.InsertChar(removedSymbol);
+            textEditService.InsertChar(removedSymbol);
         }
     }
 }

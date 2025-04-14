@@ -1,33 +1,34 @@
 using OOP_2__console_text_editor_.Controllers;
 using OOP_2__console_text_editor_.Interfaces;
 using OOP_2__console_text_editor_.Models;
+using OOP_2__console_text_editor_.Services;
 
 namespace OOP_2__console_text_editor_.Commands.Text;
 
 public class PrintCharCommand : ICommand
 {
-    DocumentController controller;
+    TextEditService _textEditService;
     private StyledSymbol? symbol;
     
-    public PrintCharCommand(DocumentController controller, char symbol)
+    public PrintCharCommand(TextEditService textEditService, char symbol)
     {
         StyledSymbol styledSymbol = new StyledSymbol();
         styledSymbol.Symbol = symbol;
         
         this.symbol = styledSymbol;
-        this.controller = controller; 
+        _textEditService = textEditService; 
     }
     
     public void Execute()
     {
         if (symbol != null)
         {
-            controller.InsertChar(symbol);
+            _textEditService.InsertChar(symbol);
         }
     }
 
     public void UnExecute()
     {
-        symbol = controller.RemoveChar();
+        symbol = _textEditService.RemoveChar();
     }
 }

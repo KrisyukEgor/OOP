@@ -1,25 +1,26 @@
 using OOP_2__console_text_editor_.Controllers;
 using OOP_2__console_text_editor_.Interfaces;
 using OOP_2__console_text_editor_.Models;
+using OOP_2__console_text_editor_.Services;
 
 namespace OOP_2__console_text_editor_.Commands.TextDecorator;
 
 public class BoldCommand : ICommand
 {
-    private DocumentController documentController;
+    private TextEditService _textEditService;
     private StyledString selectedString;
     
-    public BoldCommand(DocumentController documentController)
+    public BoldCommand(TextEditService textEditService)
     {
-        this.documentController = documentController;
+        this._textEditService = textEditService;
     }
     public void Execute()
     {
-        selectedString = documentController.SetBoldText();
+        selectedString = _textEditService.SetBoldText();
     }
 
     public void UnExecute()
     {
-        documentController.UnsetBoldText(selectedString);
+        _textEditService.UnsetBoldText(selectedString);
     }
 }

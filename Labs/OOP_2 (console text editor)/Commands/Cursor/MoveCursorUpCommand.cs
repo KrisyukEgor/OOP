@@ -1,23 +1,24 @@
 using OOP_2__console_text_editor_.Controllers;
 using OOP_2__console_text_editor_.Interfaces;
+using OOP_2__console_text_editor_.Services;
 
 namespace OOP_2__console_text_editor_.Commands.Cursor;
 
 public class MoveCursorUpCommand : ICommand
 {
-    private DocumentController documentController;
-    public MoveCursorUpCommand(DocumentController documentController)
+    private CursorController _cursorController;
+    public MoveCursorUpCommand(CursorController cursorController)
     {
-        this.documentController = documentController;
+        this._cursorController = cursorController;
     }
 
     public void Execute()
     {
-        documentController.MoveCursorUp();
+        _cursorController.MoveCursorUp();
     }
 
     public void UnExecute()
     {
-        documentController.MoveCursorDown();
+        _cursorController.MoveCursorDown();
     }
 }

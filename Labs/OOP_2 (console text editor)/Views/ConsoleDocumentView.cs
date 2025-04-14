@@ -8,8 +8,6 @@ namespace OOP_2__console_text_editor_.Views
     public class ConsoleDocumentView : IDocumentViewer
     {
         private int _firstLineIndex = 0;
-        private int cursorX = 0;
-        private int cursorY = 0;
         
         private WindowSizeController _windowSizeController;
         private TextDecoratorService textDecoratorService;
@@ -20,18 +18,7 @@ namespace OOP_2__console_text_editor_.Views
             textDecoratorService = new TextDecoratorService();
 
         }
-
-        public void SetCursorPosition(int cursorX, int cursorY)
-        {
-            this.cursorX = cursorX;
-            this.cursorY = cursorY;
-            Console.SetCursorPosition(cursorX, cursorY);
-        }
-
-        private void SetCursorPosition()
-        {
-            Console.SetCursorPosition(cursorX, cursorY);
-        }
+        
         public void Render(Document document, int firstLineIndex)
         {
             
@@ -47,11 +34,9 @@ namespace OOP_2__console_text_editor_.Views
             {
                 PrintLine(document.Lines[i], i - startLine);
             }
-
-            SetCursorPosition();
+            
         }
-
-       
+        
         public void ClearArea()
         {
             Console.Clear();   //возможно потом изменю
@@ -100,8 +85,8 @@ namespace OOP_2__console_text_editor_.Views
 
         private void HandleSelectedSymbol(StyledSymbol styledSymbol)
         {
-            Console.BackgroundColor = ConsoleColor.Blue;
-            Console.ForegroundColor = ConsoleColor.White;
+            Console.BackgroundColor = ConsoleColor.Cyan;
+            Console.ForegroundColor = ConsoleColor.Black;
             Console.Write(styledSymbol.Symbol);
             Console.ResetColor(); 
             

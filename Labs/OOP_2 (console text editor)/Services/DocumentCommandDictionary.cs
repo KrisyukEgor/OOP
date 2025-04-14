@@ -12,13 +12,16 @@ namespace OOP_2__console_text_editor_.Services;
 public class DocumentCommandDictionary : IDictionary
 {
     private readonly Dictionary<(ConsoleKey Key, ConsoleModifiers Mods), Func<ICommand>> _commands = new();
-    private DocumentController _documentController;
+    private TextEditService _textEditService;
     private CommandProcessor _commandProcessor;
+    private CursorController _cursorController;
 
-    public DocumentCommandDictionary(DocumentController documentController, CommandProcessor commandProcessor)
+    public DocumentCommandDictionary(TextEditService _textEditService, CommandProcessor commandProcessor, CursorController cursorController)
     {
-        _documentController = documentController;
+        this._textEditService = _textEditService;
         _commandProcessor = commandProcessor;
+        _cursorController = cursorController;
+        
 
         InizializeCommands();
     }
@@ -34,7 +37,7 @@ public class DocumentCommandDictionary : IDictionary
         
         if (!char.IsControl(key.KeyChar))
         {
-            return new PrintCharCommand(_documentController, key.KeyChar);
+            return new PrintCharCommand(_textEditService, key.KeyChar);
             
         }
         return null;
@@ -44,26 +47,26 @@ public class DocumentCommandDictionary : IDictionary
 
     private void InizializeCommands()
     {
-        _commands.Add((ConsoleKey.LeftArrow, 0), () => new MoveCursorLeftCommand(_documentController)); 
-        _commands.Add((ConsoleKey.RightArrow, 0 ), () => new MoveCursorRightCommand(_documentController)); 
-        _commands.Add((ConsoleKey.UpArrow, 0 ), () => new MoveCursorUpCommand(_documentController)); 
-        _commands.Add((ConsoleKey.DownArrow, 0 ), () => new MoveCursorDownCommand(_documentController)); 
+        _commands.Add((ConsoleKey.LeftArrow, 0), () => new MoveCursorLeftCommand(_cursorController)); 
+        _commands.Add((ConsoleKey.RightArrow, 0 ), () => new MoveCursorRightCommand(_cursorController)); 
+        _commands.Add((ConsoleKey.UpArrow, 0 ), () => new MoveCursorUpCommand(_cursorController)); 
+        _commands.Add((ConsoleKey.DownArrow, 0 ), () => new MoveCursorDownCommand(_cursorController)); 
         
-        _commands.Add((ConsoleKey.Backspace, 0), () => new BackspaceCommand(_documentController)); 
-        _commands.Add((ConsoleKey.Enter, 0), () => new EnterCommand(_documentController)); 
+        _commands.Add((ConsoleKey.Backspace, 0), () => new BackspaceCommand(_textEditService)); 
+        _commands.Add((ConsoleKey.Enter, 0), () => new EnterCommand(_textEditService)); 
         
         _commands.Add((ConsoleKey.Z, ConsoleModifiers.Control), () => new UndoCommand(_commandProcessor));
         _commands.Add((ConsoleKey.Y, ConsoleModifiers.Control), () => new RedoCommand(_commandProcessor));
         
-        _commands.Add((ConsoleKey.RightArrow, ConsoleModifiers.Shift), () => new SelectRightCommand(_documentController));
-        _commands.Add((ConsoleKey.LeftArrow, ConsoleModifiers.Shift), () => new SelectLeftCommand(_documentController));
+        _commands.Add((ConsoleKey.RightArrow, ConsoleModifiers.Shift), () => new SelectRightCommand(_textEditService));
+        _commands.Add((ConsoleKey.LeftArrow, ConsoleModifiers.Shift), () => new SelectLeftCommand(_textEditService));
         
-        _commands.Add((ConsoleKey.B, ConsoleModifiers.Control), () => new BoldCommand(_documentController));
-        _commands.Add((ConsoleKey.I, ConsoleModifiers.Control), () => new ItalicCommand(_documentController));
-        _commands.Add((ConsoleKey.U, ConsoleModifiers.Control), () => new UnderlineCommand(_documentController));
+        _commands.Add((ConsoleKey.B, ConsoleModifiers.Control), () => new BoldCommand(_textEditService));
+        _commands.Add((ConsoleKey.I, ConsoleModifiers.Control), () => new ItalicCommand(_textEditService));
+        _commands.Add((ConsoleKey.U, ConsoleModifiers.Control), () => new UnderlineCommand(_textEditService));
         
-        _commands.Add((ConsoleKey.C, ConsoleModifiers.Control), () => new CopyCommand(_documentController));
-        _commands.Add((ConsoleKey.V, ConsoleModifiers.Control), () => new PasteCommand(_documentController));
+        _commands.Add((ConsoleKey.C, ConsoleModifiers.Control), () => new CopyCommand(_textEditService));
+        _commands.Add((ConsoleKey.V, ConsoleModifiers.Control), () => new PasteCommand(_textEditService));
         
 
     }

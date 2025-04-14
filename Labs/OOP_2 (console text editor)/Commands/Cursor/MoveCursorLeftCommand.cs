@@ -1,23 +1,24 @@
 using OOP_2__console_text_editor_.Controllers;
 using OOP_2__console_text_editor_.Interfaces;
+using OOP_2__console_text_editor_.Services;
 
 namespace OOP_2__console_text_editor_.Commands.Cursor;
 
 public class MoveCursorLeftCommand : ICommand
 {
-    private DocumentController documentController;
-    public MoveCursorLeftCommand(DocumentController documentController)
+    private CursorController cursorController;
+    public MoveCursorLeftCommand(CursorController cursorController)
     {
-        this.documentController = documentController;
+        this.cursorController = cursorController;
     }
 
     public void Execute()
     {
-        documentController.MoveCursorLeft();
+        cursorController.MoveCursorLeft();
     }
 
     public void UnExecute()
     {
-        documentController.MoveCursorRight();
+        cursorController.MoveCursorRight();
     }
 }

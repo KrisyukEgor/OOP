@@ -1,24 +1,24 @@
 using OOP_2__console_text_editor_.Controllers;
 using OOP_2__console_text_editor_.Interfaces;
+using OOP_2__console_text_editor_.Services;
 
 namespace OOP_2__console_text_editor_.Commands.Select;
 
 public class SelectLeftCommand : ICommand
 {
-    DocumentController controller;
-     
-    public SelectLeftCommand(DocumentController controller)
+    TextEditService _textEditService;
+    public SelectLeftCommand(TextEditService documentController) 
     {
-        this.controller = controller; 
+        _textEditService = documentController;
     }
-     
+
     public void Execute()
     {
-        controller.SelectLeft();
+        _textEditService.SelectLeft();
     }
- 
+
     public void UnExecute()
     {
-        controller.SelectRight();
+        _textEditService.SelectRight();
     }
 }
