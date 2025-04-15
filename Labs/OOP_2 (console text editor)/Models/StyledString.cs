@@ -4,10 +4,9 @@ namespace OOP_2__console_text_editor_.Models;
 
 public class StyledString
 {
-    private List<StyledSymbol> _styledString;
+    private List<StyledSymbol> _styledString = new();
     public StyledString()
     {
-        _styledString = new List<StyledSymbol>() ;
     }
     
     public StyledString(StyledString styledString)

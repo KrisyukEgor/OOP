@@ -1,7 +1,5 @@
-
-using OOP_2__console_text_editor_.Commands.HotKeys;
+using OOP_2__console_text_editor_.Commands.Document.HotKeys;
 using OOP_2__console_text_editor_.Interfaces;
-using OOP_2__console_text_editor_.Models;
 using OOP_2__console_text_editor_.Services;
 
 namespace OOP_2__console_text_editor_.Controllers;
@@ -23,32 +21,26 @@ public class InputController
         _dictionary = dictionary;
         _commandProcessor = commandProcessor;
     }
-    
-    public void Start()
-    {
-        
-        _inputHandler.KeyPressed += ControlInputKey;
-        _inputHandler.StartListening();
-    }
 
-    private void ControlInputKey(object? sender, ConsoleKeyInfo keyInfo)
+    public void SetDictionary(IDictionary dictionary)
+    {
+        _dictionary = dictionary;
+    }
+    
+    private void ControlDocumentInput(object? sender, ConsoleKeyInfo keyInfo)
     {
         if (keyInfo.Key == ConsoleKey.Escape)
         {
             _inputHandler.StopListening();
-            _inputHandler.KeyPressed -= ControlInputKey;
+            _inputHandler.KeyPressed -= ControlDocumentInput;
             
         }
         
         try
         { 
-            ICommand? command = _dictionary.GetCommand(keyInfo);
+            var command = _dictionary.GetCommand(keyInfo);
             
-            if (command is UndoCommand)
-            {
-                command.Execute();
-            }
-            else if (command is RedoCommand)
+            if (command is UndoCommand || command is RedoCommand)
             {
                 command.Execute();
             }
@@ -64,6 +56,42 @@ public class InputController
             Console.WriteLine($"Error: {ex.Message}");
         }
     }
-    
+
+    private void ControlPageInput(object? sender, ConsoleKeyInfo keyInfo)
+    {
+        if (keyInfo.Key == ConsoleKey.Escape)
+        {
+            _inputHandler.StopListening();
+            _inputHandler.KeyPressed -= ControlPageInput;
+        }
+        
+        try
+        { 
+            var command = _dictionary.GetCommand(keyInfo);
+
+            if(command != null)
+            {
+                _commandProcessor.ExecuteCommand(command);
+            }
+            
+        }
+        catch (ArgumentOutOfRangeException ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+
+    public void ListenDocument()
+    {
+        _inputHandler.KeyPressed += ControlDocumentInput;
+        _inputHandler.StartListening();
+    }
+
+    public void ListenPage()
+    {
+        _inputHandler.KeyPressed += ControlPageInput;
+        _inputHandler.StartListening();
+    }
     
 }

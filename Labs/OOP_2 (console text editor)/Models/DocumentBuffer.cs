@@ -13,7 +13,8 @@ public class DocumentBuffer : IBuffer
 
     public void SetBuffer(StyledString str)
     {
-        buffer = str;
+        var newString = new StyledString(str);
+        buffer = newString;
     }
 
     public StyledString GetBuffer()

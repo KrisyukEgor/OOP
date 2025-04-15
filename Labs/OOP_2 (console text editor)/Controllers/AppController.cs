@@ -1,15 +1,17 @@
-using System.ComponentModel;
 using OOP_2__console_text_editor_.Interfaces;
 using OOP_2__console_text_editor_.Models;
 using OOP_2__console_text_editor_.Services;
+using OOP_2__console_text_editor_.Services.Document;
+using OOP_2__console_text_editor_.Services.Page;
+using OOP_2__console_text_editor_.Utils;
 using OOP_2__console_text_editor_.Views;
-using Buffer = OOP_2__console_text_editor_.Models;
 
 namespace OOP_2__console_text_editor_.Controllers;
 
 public class AppController
 {
-    private IDictionary dictionary;
+    private IDictionary documentDictionary;
+    private IDictionary pageDictionary;
     private IDocumentViewer documentViewer;
     private ICursorViewer cursorViewer;
     private DocumentController documentController ;
@@ -17,40 +19,39 @@ public class AppController
     private DocumentCreator documentCreator = new();
     private InputController inputController = new();
     private CommandProcessor commandProcessor = new();
-    private WindowSizeController windowSizeController = new();
+    private WindowSizeService _windowSizeService = new();
     private CursorController cursorController;
-
+    private PageService pageService;
+    
     private TextEditService _textEditService;
     private IBuffer buffer;
+    private PageController pageController;
+    private IPageViewer pageViewer;
 
     public AppController ()
     {
         buffer = new DocumentBuffer();
         
-        documentViewer = new ConsoleDocumentView(windowSizeController);
-        cursorViewer = new CursorViewer(windowSizeController);
+        documentViewer = new ConsoleDocumentView(_windowSizeService);
+        cursorViewer = new CursorViewer(_windowSizeService);
+        pageViewer = new PageViewer(_windowSizeService);
         
         cursorController = new CursorController(cursorViewer);
-        
         documentController = new DocumentController(documentViewer);
+        pageController = new PageController(pageViewer, _windowSizeService);
+        pageService = new PageService(pageController);
         
         _textEditService = new TextEditService(cursorController, buffer, documentController);
-        dictionary = new DocumentCommandDictionary(_textEditService, commandProcessor, cursorController);
+        documentDictionary = new DocumentCommandDictionary(_textEditService, commandProcessor);
+        pageDictionary = new PageDictionary(pageService);
     }
     public void Start()
     {
-        //menu
-        int state = 1;
+        pageService.RenderDocumentStatePage(); 
+        inputController.Initialize(pageDictionary ,commandProcessor);
         
-        if (state == 1)
-        {
-            NewDocument();
-        }
-        else if (state == 2)
-        {
-            OldDocument();
-        }
-        
+        inputController.ListenPage();
+
     }
 
     private void NewDocument()
@@ -71,7 +72,7 @@ public class AppController
     {
         _textEditService.SetDocument(document);
         
-        inputController.Initialize(dictionary ,commandProcessor);
-        inputController.Start(); 
+        inputController.SetDictionary(documentDictionary);
+        inputController.ListenDocument();
     }
 }
