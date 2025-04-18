@@ -7,14 +7,13 @@ namespace OOP_2__console_text_editor_.Views;
 
 public class PageViewer : IPageViewer
 {
-    private WindowSizeService _windowSizeService;
-    public PageViewer(WindowSizeService windowSizeService)
+    private WindowService _windowService;
+    public PageViewer(WindowService windowService)
     {
-        _windowSizeService = windowSizeService;
+        _windowService = windowService;
     }
     public void RenderPage(Page page)
     {
-        Console.Clear();
         
         foreach (var button in page.GetButtons())
         {
@@ -31,12 +30,7 @@ public class PageViewer : IPageViewer
             Console.ForegroundColor = ConsoleColor.Black;
             Console.BackgroundColor = ConsoleColor.Gray;
         }
-        else
-        {
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.BackgroundColor = ConsoleColor.Black;
-        }
-
+        
         int textX = button.X + (button.Width - button.Text.Length) / 2;
         int textY = button.Y + button.Height / 2;
 

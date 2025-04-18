@@ -9,12 +9,12 @@ namespace OOP_2__console_text_editor_.Views
     {
         private int _firstLineIndex = 0;
         
-        private WindowSizeService _windowSizeService;
+        private WindowService _windowService;
         private TextDecoratorService textDecoratorService;
 
-        public ConsoleDocumentView(WindowSizeService windowSizeService)
+        public ConsoleDocumentView(WindowService windowService)
         {
-            _windowSizeService = windowSizeService;
+            _windowService = windowService;
             textDecoratorService = new TextDecoratorService();
 
         }
@@ -25,7 +25,7 @@ namespace OOP_2__console_text_editor_.Views
             _firstLineIndex = firstLineIndex;
             ClearArea();
 
-            int windowHeight = _windowSizeService.Height;
+            int windowHeight = _windowService.Height;
 
             int startLine = Math.Max(0, _firstLineIndex);
             int endLine = Math.Min(document.Lines.Count, startLine + windowHeight);

@@ -48,7 +48,18 @@ public class PageService
         
         UpdateView();
     }
-    
+
+    public void HandleClick()
+    {
+
+        for (int i = 0; i < currentPage.GetButtons().Count; i++)
+        {
+            if (currentPage.GetButtons()[i].IsSelected)
+            {
+                currentPage.GetButtons()[i].Click();
+            }
+        }
+    }
     public void RenderDocumentStatePage()
     {
         string pageName = "DocumentState";
@@ -61,8 +72,10 @@ public class PageService
             Button openDocButton = new Button("Open document");
             Button createDocButton = new Button("Create document");
 
+            
             List<Button> buttons = new List<Button>() { openDocButton, createDocButton };
-
+            
+            
             _pageController.CalculateButtonsParameters(buttons);
             
             page.SetButtons(buttons);
@@ -75,7 +88,7 @@ public class PageService
         UpdateView();
         
     }
-
+    
     private void UpdateView()
     {
         _pageController.RenderPage(currentPage);
@@ -93,4 +106,5 @@ public class PageService
 
         return null;
     }
+    
 }

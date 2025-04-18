@@ -1,29 +1,22 @@
 namespace OOP_2__console_text_editor_.Services;
 
-public class WindowSizeService
+public class WindowService
 {
     private int width  = Console.WindowWidth;
     private int height = Console.WindowHeight;
 
-    private int headerHeight = 5;
-    private int sectionHeight = 0;
+    private int headerHeight = 3;
+    
     private bool _watching;
     private readonly CancellationTokenSource _cts = new();
+    
 
     public int Width  => width;
     public int Height => height;
 
     public int HeaderHeight
     {
-        get => headerHeight;
-    }
-
-    public int SectionHeight
-    {
-        get
-        {
-            return height - headerHeight;
-        }
+        get { return headerHeight; }
     }
 
     public event Action? SizeChanged;

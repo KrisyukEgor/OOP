@@ -6,11 +6,11 @@ namespace OOP_2__console_text_editor_.Views;
 
 public class CursorViewer : ICursorViewer 
 {
-    private WindowSizeService _windowSizeService;
+    private WindowService _windowService;
     
-    public CursorViewer(WindowSizeService windowSizeService)
+    public CursorViewer(WindowService windowService)
     {
-        this._windowSizeService = windowSizeService;
+        this._windowService = windowService;
     }
     public void SetCursorPosition(int cursorX, int cursorY)
     {
