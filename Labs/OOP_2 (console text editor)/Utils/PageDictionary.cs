@@ -32,5 +32,6 @@ public class PageDictionary : IDictionary
     {
         _commands.Add((ConsoleKey.DownArrow, 0), () => new SelectDownButtonCommand(pageService));
         _commands.Add((ConsoleKey.UpArrow, 0), () => new SelectUpButtonCommand(pageService));
+        _commands.Add((ConsoleKey.Enter, 0), () => new ClickCommand(pageService));
     }
 }

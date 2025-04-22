@@ -11,10 +11,12 @@ public class PageService
     private List<Models.Page> pagesList = new();
     
     private Models.Page _currentPage;
+    private ButtonSetClickService buttonSetClickService;
     
-    public PageService(PageController pageController)
+    public PageService(PageController pageController, ButtonSetClickService buttonSetClickService)
     {
         _pageController = pageController;
+        this.buttonSetClickService = buttonSetClickService;
     }
     
     public void SelectDownButton()
@@ -75,6 +77,8 @@ public class PageService
             
             List<Button> buttons = new List<Button>() { openDocButton, createDocButton };
             
+            buttonSetClickService.ButtonSetCreateDocument(createDocButton);
+            buttonSetClickService.ButtonSetOpenDocument(openDocButton);
             
             _pageController.CalculateButtonsParameters(buttons);
             

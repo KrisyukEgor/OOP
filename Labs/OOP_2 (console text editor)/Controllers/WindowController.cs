@@ -1,28 +1,42 @@
 using OOP_2__console_text_editor_.Interfaces;
 using OOP_2__console_text_editor_.Services;
+using OOP_2__console_text_editor_.Services.Document;
 using OOP_2__console_text_editor_.Services.Page;
-using OOP_2__console_text_editor_.Views;
 
 namespace OOP_2__console_text_editor_.Controllers;
 
 public class WindowController
 {
     private IWindowViewer _windowViewer;
-    private WindowService _windowService;
+    private WindowSizeService _windowSizeService;
     private HeaderService _headerService;
-    
-    private const int headerHeight = 5;
-    public WindowController(IWindowViewer windowViewer, WindowService windowService, HeaderService headerService)
+
+    private MenuService _menuService;
+    private DocumentService _documentService;
+    private InputController _inputController = new();
+
+    private CommandProcessor commandProcessor = new();
+
+    private ButtonSetClickService buttonSetClickService;
+
+    public WindowController(IWindowViewer windowViewer, WindowSizeService windowSizeService)
     {
         _windowViewer = windowViewer;
-        _windowService = windowService;
-        _headerService = headerService;
+        _windowSizeService = windowSizeService;
+        _headerService = new HeaderService();
+
+        _documentService = new DocumentService(windowSizeService, commandProcessor, _inputController);
+        buttonSetClickService = new ButtonSetClickService(_documentService);
+
+        _menuService = new MenuService(windowSizeService, _inputController, buttonSetClickService);
+
+        _inputController.Initialize(commandProcessor);
     }
 
     private void RenderBorder()
     {
-        int width = _windowService.Width;
-        int height = _windowService.Height;
+        int width = _windowSizeService.Width;
+        int height = _windowSizeService.Height;
 
         _windowViewer.RenderBoard(width, height);
     }
@@ -36,16 +50,15 @@ public class WindowController
 
     private void RenderHeader()
     {
-        int width = _windowService.Width;
-        int height = _windowService.HeaderHeight;
-        
+        int width = _windowSizeService.Width;
+        int height = _windowSizeService.HeaderHeight;
+
         _headerService.Render(width, height);
     }
 
     private void RenderMain()
     {
-        
+        _menuService.RenderCurrentPage();
+        _menuService.Focus();
     }
-
-
 }

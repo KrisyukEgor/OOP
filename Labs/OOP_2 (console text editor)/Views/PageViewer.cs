@@ -7,10 +7,10 @@ namespace OOP_2__console_text_editor_.Views;
 
 public class PageViewer : IPageViewer
 {
-    private WindowService _windowService;
-    public PageViewer(WindowService windowService)
+    private WindowSizeService _windowSizeService;
+    public PageViewer(WindowSizeService windowSizeService)
     {
-        _windowService = windowService;
+        _windowSizeService = windowSizeService;
     }
     public void RenderPage(Page page)
     {

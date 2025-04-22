@@ -16,9 +16,8 @@ public class InputController
         _inputHandler = new InputHandler();
     }
 
-    public void Initialize(IDictionary dictionary, CommandProcessor commandProcessor)
+    public void Initialize(CommandProcessor commandProcessor)
     {
-        _dictionary = dictionary;
         _commandProcessor = commandProcessor;
     }
 
@@ -85,12 +84,16 @@ public class InputController
     public void ListenDocument()
     {
         _inputHandler.KeyPressed += ControlDocumentInput;
+        _inputHandler.KeyPressed -= ControlPageInput;
+        
         _inputHandler.StartListening();
     }
 
     public void ListenPage()
     {
         _inputHandler.KeyPressed += ControlPageInput;
+        _inputHandler.KeyPressed -= ControlDocumentInput;
+        
         _inputHandler.StartListening();
     }
     

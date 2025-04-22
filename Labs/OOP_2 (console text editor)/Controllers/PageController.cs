@@ -7,17 +7,17 @@ namespace OOP_2__console_text_editor_.Controllers;
 public class PageController
 {
     private IPageViewer _pageViewer;
-    private WindowService _windowService;
+    private WindowSizeService _windowSizeService;
 
     private const int ButtonHeight = 5;
     private const int ButtonWidth = 21;
     private const int VerticalMargin = 2;
     
     
-    public PageController(IPageViewer pageViewer, WindowService windowService)
+    public PageController(IPageViewer pageViewer, WindowSizeService windowSizeService)
     {
         this._pageViewer = pageViewer;
-        this._windowService = windowService;
+        this._windowSizeService = windowSizeService;
     }
     
     public void RenderPage(Page page)
@@ -42,10 +42,10 @@ public class PageController
 
     private void CalculateButtonsPosition(List<Button> buttons)
     {
-        int windowWidth = _windowService.Width;
-        int windowHeight = _windowService.Height;
+        int windowWidth = _windowSizeService.Width;
+        int windowHeight = _windowSizeService.Height;
         
-        int headerHeight = _windowService.HeaderHeight;
+        int headerHeight = _windowSizeService.HeaderHeight;
         
         int startY = (windowHeight + headerHeight - (buttons.Count * (ButtonHeight + VerticalMargin))) / 2;
         

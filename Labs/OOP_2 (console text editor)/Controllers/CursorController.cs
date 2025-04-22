@@ -7,11 +7,11 @@ public class CursorController
 {
     private Cursor cursor;
     private Document? document;
-    private ICursorViewer cursorViewer;
+    private IDocumentViewer documentViewer;
 
-    public CursorController(ICursorViewer cursorViewer)
+    public CursorController(IDocumentViewer documentViewer)
     {
-        this.cursorViewer = cursorViewer;
+        this.documentViewer = documentViewer;
         
         cursor = new Cursor();
         cursor.X = 0;
@@ -157,7 +157,6 @@ public class CursorController
         var currentLine = document.Lines[cursor.Y];
         var maxX = currentLine.Length;
         
-
         if (currentLine.Length > 0 && currentLine.GetStyledSymbol(currentLine.Length - 1).Symbol == '\0')
         {
             maxX = currentLine.Length - 1;
@@ -165,7 +164,7 @@ public class CursorController
         
         cursor.X = Math.Clamp(cursor.X, 0, maxX);
         
-        cursorViewer.SetCursorPosition(cursor.X, cursor.Y);
+        documentViewer.SetCursorPosition(cursor.X, cursor.Y);
     }
 
 }
