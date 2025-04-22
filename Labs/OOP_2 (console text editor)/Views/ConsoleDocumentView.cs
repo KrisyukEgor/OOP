@@ -1,6 +1,8 @@
 using OOP_2__console_text_editor_.Interfaces;
 using OOP_2__console_text_editor_.Models;
 using OOP_2__console_text_editor_.Services;
+using OOP_2__console_text_editor_.Services.Document;
+using OOP_2__console_text_editor_.Services.Window;
 using OOP_2__console_text_editor_.Utils;
 
 namespace OOP_2__console_text_editor_.Views
@@ -14,7 +16,9 @@ namespace OOP_2__console_text_editor_.Views
         private int sectionHeight = 0;
         private (int, int) cursorPosition = (0, 0);
         
-        const int borderSize = 1;
+        int borderSize = 1;
+        private int _scrollOffset = 0; 
+        private int _absoluteCursorY = 0; 
         
         private WindowSizeService _windowSizeService;
         private TextDecoratorService textDecoratorService;
@@ -26,14 +30,14 @@ namespace OOP_2__console_text_editor_.Views
             
         }
         
-        public void Render(Document document, int scrollOffset = 0)
+        public void Render(Document document)
         {
             _firstLineIndex = _windowSizeService.GetMainStartLine();
-            ClearArea();
+            ClearView();
             
             CalculateSectionSize();
             
-            List<StyledString> stringsToRender = GetListToRender(document, scrollOffset);
+            List<StyledString> stringsToRender = GetListToRender(document);
 
             foreach (var line in stringsToRender)
             {
@@ -44,26 +48,28 @@ namespace OOP_2__console_text_editor_.Views
         public void SetCursorPosition(int cursorX, int cursorY)
         {
             cursorPosition = AdaptCursorPosition(cursorX, cursorY);
+            
             Console.SetCursorPosition(cursorPosition.Item1, cursorPosition.Item2);
         }
 
         private (int, int) AdaptCursorPosition(int cursorX, int cursorY)
         {
             
-            int newCursorX = startPosition.Item1 + cursorX;
-            int newCursorY = startPosition.Item2 + cursorY;
-            
-            if (newCursorX >= sectionWidth)
-            {
-                newCursorX -= sectionWidth;
-                newCursorY++;
+            int safeCursorX = Math.Max(0, cursorX);
+            int safeCursorY = Math.Max(0, cursorY);
 
-            }
+            int newCursorX = startPosition.Item1 + safeCursorX;
+            int newCursorY = startPosition.Item2 + safeCursorY;
+
+            int overflowLines = sectionWidth != 0 ? newCursorX / sectionWidth : 0;
+            
+            newCursorX = sectionWidth != 0 ? newCursorX % sectionWidth: 0;
+            newCursorY += overflowLines;
             
             return (newCursorX, newCursorY);
         }
         
-        public void ClearArea()
+        private void ClearView()
         {
             var (startX, startY) = startPosition;
             int endX = startX + sectionWidth;
@@ -92,24 +98,24 @@ namespace OOP_2__console_text_editor_.Views
             sectionHeight = endY - startY;
         }
 
-        private List<StyledString> GetListToRender(Document document, int scrollOffset)
+        private List<StyledString> GetListToRender(Document document)
         {
             int maxLinesCount = sectionHeight;
             List<StyledString> styledStrings = new List<StyledString>();
             
-            int linesCount = document.Lines.Count - scrollOffset;
+            int linesCount = document.Lines.Count - _scrollOffset;
 
             for (int i = 0; i < Math.Min(linesCount, maxLinesCount); i++)
             {
-                var documentLine = document.GetLine(i + scrollOffset);
+                var documentLine = document.GetLine(i + _scrollOffset);
                 
                 for (int j = 0; j < documentLine.Length; j += sectionWidth)
                 {
                     int length = Math.Min(sectionWidth, documentLine.Length - j);
-                    styledStrings.Add(documentLine.Substring(j, length));
+                    var documentLinePart = documentLine.Substring(j, length);
+                    styledStrings.Add(documentLinePart);
                 }
             }
-            
             
             return styledStrings;
         }

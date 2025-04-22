@@ -1,10 +1,10 @@
 using OOP_2__console_text_editor_.Controllers;
 using OOP_2__console_text_editor_.Interfaces;
-using OOP_2__console_text_editor_.Services.Page;
 using OOP_2__console_text_editor_.Utils;
+using OOP_2__console_text_editor_.Utils.Dictionaries;
 using OOP_2__console_text_editor_.Views;
 
-namespace OOP_2__console_text_editor_.Services;
+namespace OOP_2__console_text_editor_.Services.Window;
 
 public class MenuService
 {
@@ -36,8 +36,14 @@ public class MenuService
         inputController.ListenPage();
     }
 
-    public void RenderCurrentPage()
+    public void RenderDocumentStatePage()
     {
         pageService.RenderDocumentStatePage();
     }
+
+    public void RenderSavePage()
+    {
+        pageService.RenderSavePage();
+    }
+    
 }

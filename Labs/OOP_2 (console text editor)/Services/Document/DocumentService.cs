@@ -1,11 +1,12 @@
 using OOP_2__console_text_editor_.Controllers;
 using OOP_2__console_text_editor_.Interfaces;
 using OOP_2__console_text_editor_.Models;
-using OOP_2__console_text_editor_.Services.Document;
+using OOP_2__console_text_editor_.Services.Window;
 using OOP_2__console_text_editor_.Utils;
+using OOP_2__console_text_editor_.Utils.Dictionaries;
 using OOP_2__console_text_editor_.Views;
 
-namespace OOP_2__console_text_editor_.Services;
+namespace OOP_2__console_text_editor_.Services.Document;
 
 public class DocumentService
 {

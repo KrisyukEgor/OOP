@@ -1,4 +1,4 @@
-namespace OOP_2__console_text_editor_.Services;
+namespace OOP_2__console_text_editor_.Services.Window;
 
 public class WindowSizeService
 {

@@ -1,7 +1,7 @@
 using OOP_2__console_text_editor_.Controllers;
 using OOP_2__console_text_editor_.Models;
 
-namespace OOP_2__console_text_editor_.Services.Page;
+namespace OOP_2__console_text_editor_.Services.Window;
 
 public class PageService
 {
@@ -72,8 +72,7 @@ public class PageService
             page = new Models.Page(pageName);
             
             Button openDocButton = new Button("Open document");
-            Button createDocButton = new Button("Create document");
-
+            Button createDocButton = new Button("New document");
             
             List<Button> buttons = new List<Button>() { openDocButton, createDocButton };
             
@@ -91,6 +90,31 @@ public class PageService
         currentPage = page;
         UpdateView();
         
+    }
+
+    public void RenderSavePage()
+    {
+        string pageName = "SavePage";
+        var page = GetPage(pageName);
+
+        if (page == null)
+        {
+            page = new Models.Page(pageName);
+            
+            Button localButton = new Button("Save local");
+            Button cloudButton = new Button("Save cloud");
+            
+            List<Button> buttons = new List<Button>() { localButton, cloudButton };
+            
+            _pageController.CalculateButtonsParameters(buttons);
+            
+            page.SetButtons(buttons);
+            
+            pagesList.Add(page);
+        }
+        
+        currentPage = page;
+        UpdateView();
     }
     
     private void UpdateView()

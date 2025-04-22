@@ -1,9 +1,7 @@
-using OOP_2__console_text_editor_.Controllers;
 using OOP_2__console_text_editor_.Interfaces;
-using OOP_2__console_text_editor_.Services.Page;
-using OOP_2__console_text_editor_.Utils;
+using OOP_2__console_text_editor_.Services.Window;
 
-namespace OOP_2__console_text_editor_.Commands.Page;
+namespace OOP_2__console_text_editor_.Commands.Window;
 
 public class ClickCommand : ICommand
 {

@@ -1,7 +1,7 @@
 using OOP_2__console_text_editor_.Interfaces;
 using OOP_2__console_text_editor_.Services;
 using OOP_2__console_text_editor_.Services.Document;
-using OOP_2__console_text_editor_.Services.Page;
+using OOP_2__console_text_editor_.Services.Window;
 
 namespace OOP_2__console_text_editor_.Controllers;
 
@@ -58,7 +58,7 @@ public class WindowController
 
     private void RenderMain()
     {
-        _menuService.RenderCurrentPage();
+        _menuService.RenderDocumentStatePage();
         _menuService.Focus();
     }
 }

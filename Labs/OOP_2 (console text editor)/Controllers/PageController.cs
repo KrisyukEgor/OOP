@@ -1,6 +1,7 @@
 using OOP_2__console_text_editor_.Interfaces;
 using OOP_2__console_text_editor_.Models;
 using OOP_2__console_text_editor_.Services;
+using OOP_2__console_text_editor_.Services.Window;
 
 namespace OOP_2__console_text_editor_.Controllers;
 

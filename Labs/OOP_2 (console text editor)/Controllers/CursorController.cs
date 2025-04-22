@@ -79,7 +79,7 @@ public class CursorController
             UpdatePosition();
         }
     }
-
+    
     public void MoveCursorLeft()
     {
         if (cursor.X > 0)
@@ -151,7 +151,7 @@ public class CursorController
             cursor.Y = 0;
             return;
         }
-
+        
         cursor.Y = Math.Clamp(cursor.Y, 0, document.Lines.Count - 1);
         
         var currentLine = document.Lines[cursor.Y];
@@ -166,5 +166,6 @@ public class CursorController
         
         documentViewer.SetCursorPosition(cursor.X, cursor.Y);
     }
+    
 
 }

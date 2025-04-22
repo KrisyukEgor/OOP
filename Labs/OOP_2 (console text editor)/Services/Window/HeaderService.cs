@@ -1,6 +1,6 @@
 using OOP_2__console_text_editor_.Models;
 
-namespace OOP_2__console_text_editor_.Services.Page;
+namespace OOP_2__console_text_editor_.Services.Window;
 
 public class HeaderService
 {

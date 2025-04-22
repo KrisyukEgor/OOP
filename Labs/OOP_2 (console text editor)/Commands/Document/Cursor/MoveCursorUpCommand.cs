@@ -8,9 +8,9 @@ namespace OOP_2__console_text_editor_.Commands.Document.Cursor;
 public class MoveCursorUpCommand : ICommand
 {
     private TextEditService _textEditService;
-    public MoveCursorUpCommand(TextEditService cursorController)
+    public MoveCursorUpCommand(TextEditService textEditService)
     {
-        this._textEditService = _textEditService;
+        this._textEditService = textEditService;
     }
 
     public void Execute()

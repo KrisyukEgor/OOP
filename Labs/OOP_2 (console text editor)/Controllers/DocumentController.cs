@@ -8,8 +8,6 @@ public class DocumentController
     private Document? document = null;
     private readonly IDocumentViewer _documentViewer;
     
-    private int _scrollOffset = 0;
-
     public DocumentController(IDocumentViewer documentViewer)
     {
        
@@ -19,7 +17,6 @@ public class DocumentController
     public void SetDocument(Document document)
     {
         this.document = document;
-        _scrollOffset = 0;
         
         UpdateView();
     }
@@ -28,7 +25,7 @@ public class DocumentController
     {
         if (document == null || document.Lines.Count == 0) return;
         
-        _documentViewer.Render(document, _scrollOffset);
+        _documentViewer.Render(document);
         
     }
     

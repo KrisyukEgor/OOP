@@ -1,6 +1,6 @@
 using OOP_2__console_text_editor_.Interfaces;
 
-namespace OOP_2__console_text_editor_.Utils;
+namespace OOP_2__console_text_editor_.Utils.Decorators;
 
 public class PlainText : ITextComponent
 {

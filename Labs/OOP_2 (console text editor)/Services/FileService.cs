@@ -1,6 +1,6 @@
-namespace OOP_2__console_text_editor_.Services.Document;
+namespace OOP_2__console_text_editor_.Services;
 
-public class DocumentCreator
+public class FileService
 {
     public Models.Document CreateDocument()
     {
@@ -13,4 +13,6 @@ public class DocumentCreator
         Models.Document document = new Models.Document();
         return document;
     }
+    
+    
 }

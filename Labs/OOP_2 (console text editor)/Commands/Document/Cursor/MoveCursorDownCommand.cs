@@ -10,7 +10,7 @@ public class MoveCursorDownCommand : ICommand
     private TextEditService _textEditService;
     public MoveCursorDownCommand(TextEditService textEditService)
     {
-        this._textEditService = _textEditService;
+        this._textEditService = textEditService;
     }
 
     public void Execute()

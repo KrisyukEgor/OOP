@@ -257,7 +257,7 @@ public class TextEditService
         {
             selectionService.Reset();
             UpdateView();
-
+        
         }
     }
 
@@ -306,14 +306,30 @@ public class TextEditService
 
     public void MoveCursorUp()
     {
+        int cursorY = _cursorController.GetY();
+        
         _cursorController.MoveCursorUp();
         UpdateCursorPosition();
+        
     }
 
     public void MoveCursorDown()
     {
+        int cursorY = _cursorController.GetY();
+        int linesCount = document.Lines.Count;
+        
+        if (cursorY == linesCount - 1)
+        {
+            var line = new StyledString();
+            var emptySymbol = new StyledSymbol();
+            emptySymbol.Symbol = '\0';
+            line.AddSymbol(emptySymbol);
+            
+            _documentEditor.InsertLine(document,cursorY + 1,line );
+        }
         _cursorController.MoveCursorDown();
         UpdateCursorPosition();
+        
     }
 
     private void UpdateCursorPosition()
@@ -321,4 +337,5 @@ public class TextEditService
         ClearSelection();
         _cursorController.UpdatePosition();
     }
+    
 }

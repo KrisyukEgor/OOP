@@ -3,13 +3,11 @@ using OOP_2__console_text_editor_.Commands.Document.HotKeys;
 using OOP_2__console_text_editor_.Commands.Document.Select;
 using OOP_2__console_text_editor_.Commands.Document.Text;
 using OOP_2__console_text_editor_.Commands.Document.TextDecorator;
-using OOP_2__console_text_editor_.Utils;
 using OOP_2__console_text_editor_.Interfaces;
-using OOP_2__console_text_editor_.Models;
 using OOP_2__console_text_editor_.Services;
 using OOP_2__console_text_editor_.Services.Document;
 
-namespace OOP_2__console_text_editor_.Utils;
+namespace OOP_2__console_text_editor_.Utils.Dictionaries;
 
 public class DocumentCommandDictionary : IDictionary
 {
